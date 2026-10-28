@@ -9,6 +9,9 @@ type Project = CollectionEntry<"projects">;
 
 export const normEmail = (email: string) => email.trim().toLowerCase();
 
+/** Past members (`status: past`) keep their profile, projects and papers, but are listed separately. */
+export const isPast = (person: Person) => person.data.status === "past";
+
 /** All of a person's addresses, normalised. */
 export const personEmails = (person: Person) => [person.data.email, ...person.data.otherEmails].map(normEmail);
 

@@ -15,6 +15,7 @@ import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import { getResearchAreas } from "../lib/research";
 import { getAllPublications, publicationsForProject } from "../lib/publications";
+import { isPast } from "../lib/people";
 import { getHomePhotos } from "../lib/homePhotos";
 import { site, highlights } from "../data/site";
 
@@ -38,7 +39,7 @@ const stats = [
     // Spec B13: no status field yet, so this counts every listed project.
     { label: "Research projects", value: projects.length },
     { label: "Publications", value: publications.length },
-    { label: "Researchers", value: people.length },
+    { label: "Researchers", value: people.filter((p) => !isPast(p)).length },
 ];
 
 const projectCount = (title: string) => projects.filter((p) => p.data.researchArea === title).length;

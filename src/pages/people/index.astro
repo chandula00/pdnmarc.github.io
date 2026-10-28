@@ -3,8 +3,11 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PersonCard from "../../components/PersonCard.astro";
 import Tag from "../../components/ui/Tag.astro";
+import { isPast } from "../../lib/people";
 
-const people = await getCollection("people");
+const everyone = await getCollection("people");
+// Current members are grouped by role; past members (`status: past`) get their own section last.
+const people = everyone.filter((p) => !isPast(p));
 
 // Fixed group order (spec §7.6). Every post lands in a group; unknown posts fall
 // into "Team" instead of being dropped (fixes B1).
@@ -37,6 +40,13 @@ const groups = [
         tag: "MARC",
         posts: [],
         people: people.filter((p) => !known.has(p.data.post)).sort(byName),
+    },
+    {
+        id: "past-members",
+        title: "Past members",
+        tag: "Alumni",
+        posts: [],
+        people: everyone.filter(isPast).sort(byName),
     },
 ].filter((g) => g.people.length > 0);
 ---
@@ -74,6 +84,7 @@ const groups = [
                                     role={person.data.post}
                                     href={`/people/${person.id}/`}
                                     photo={person.data.photo}
+                                    affiliation={isPast(person) && person.data.currentPosition ? `Now: ${person.data.currentPosition}` : undefined}
                                 />
                             </li>
                         ))}

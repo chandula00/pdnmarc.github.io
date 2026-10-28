@@ -56,6 +56,9 @@ const people = defineCollection({
         // and other forms of the name used in author lists.
         otherEmails: z.array(z.string().email()).default([]),
         otherNames: z.array(z.string()).default([]),
+        // Past members stay on the site (and linked to their projects and papers) under "Past members".
+        status: z.enum(["current", "past"]).default("current"),
+        currentPosition: z.string().optional(), // where a past member is now, e.g. "PhD, Columbia University, USA"
     })
 
 });
