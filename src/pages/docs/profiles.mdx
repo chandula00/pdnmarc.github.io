@@ -176,6 +176,8 @@ Email matching ignores upper and lower case, so `Jane.Doe@…` and `jane.doe@…
 | --- | --- | --- |
 | `post` | Yes | Your role. Use exactly one of `Director`, `Deputy Director`, `Research Assistant` or `Volunteer`. The People page groups people by role. |
 | `photo` | No | Path to your photo, starting with `./photos/`. Without one, a neutral avatar is shown. |
+| `status` | No | `current` (the default) or `past`. Past members are listed under **Past members**. See [When you leave MARC](#when-you-leave-marc). |
+| `currentPosition` | No | For past members only: where you are now, for example `"PhD, Columbia University, USA"`. Shown as "Now: …". |
 | Biography | No | Everything below the closing `---`, in Markdown: paragraphs, headings, lists, links and images. If empty, the Biography section is not shown. |
 
 The **file name** sets your page address: `Jane_Doe.md` becomes `/people/jane_doe/`. Nothing on the site
@@ -208,6 +210,30 @@ otherNames:
 Remove an old value only when nothing uses it any more: no project file lists that address, and no
 paper lists that form of your name.
 
+## When you leave MARC
+
+Don't delete your profile. Mark it as past instead:
+
+```yaml
+---
+email: jane.doe@eng.pdn.ac.lk
+post: Research Assistant
+name: Jane Doe
+photo: ./photos/jane_doe.jpg
+status: past
+currentPosition: "PhD, Example University, USA"
+---
+```
+
+- You move from your role's group to **Past members** on the People page, with your role at MARC and
+  "Now: …" from `currentPosition`. Your profile page shows a "Past member" label.
+- **Everything stays linked.** Your projects and publications stay on your profile, and you stay on
+  those project pages (marked "Past member"), because your emails and names are unchanged. Leave your
+  lines in the project files: they record that you worked on the project.
+- Keep `post` as the role you held at MARC.
+- Consider rewording your biography in the past tense ("was a Research Assistant at MARC…").
+- Past members are not counted in the "Researchers" figure on the home page.
+
 ## Photo tips
 
 - Use a `.jpg`, `.jpeg` or `.png` file, ideally square and at least 400 × 400 pixels.
@@ -230,6 +256,7 @@ When you open a pull request, an automatic check validates every profile. If it 
 - a `post` that is not one of the four roles;
 - an address (in `email` or `otherEmails`) already used by another profile;
 - a name form already used by another profile, or one with only one word;
+- a `status` other than `current` or `past`, or a `currentPosition` without `status: past`;
 - a `photo` path that does not match the file;
 - a profile saved outside the `profiles/` folder.
 

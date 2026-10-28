@@ -9,7 +9,7 @@ import PublicationItem from "../../components/PublicationItem.astro";
 import defaultAvatar from "../../assets/avatar_default.svg";
 import { publicationsForProject, projectLinkMap, groupByYear, normKey } from "../../lib/publications";
 import { getResearchAreas } from "../../lib/research";
-import { projectTeam } from "../../lib/people";
+import { isPast, projectTeam } from "../../lib/people";
 
 export async function getStaticPaths() {
     const projects = await getCollection("projects");
@@ -141,7 +141,10 @@ const areaPage = getResearchAreas().find((a) => a.title === project.data.researc
                                                 <Image src={person.data.photo ?? defaultAvatar} alt="" width={80} height={80} class="team-row__avatar h-10 w-10" />
                                                 <span>
                                                     <span class="block font-semibold text-heading group-hover:text-primary">{label}</span>
-                                                    <span class="block text-xs text-muted">{person.data.post}</span>
+                                                    <span class="block text-xs text-muted">
+                                                        {person.data.post}
+                                                        {isPast(person) && " · Past member"}
+                                                    </span>
                                                 </span>
                                             </a>
                                         ) : (
@@ -167,7 +170,10 @@ const areaPage = getResearchAreas().find((a) => a.title === project.data.researc
                                         {person ? (
                                             <a href={`/people/${person.id}/`} class="team-row group">
                                                 <Image src={person.data.photo ?? defaultAvatar} alt="" width={64} height={64} class="team-row__avatar h-8 w-8" />
-                                                <span class="truncate font-medium text-heading group-hover:text-primary">{label}</span>
+                                                <span class="min-w-0">
+                                                    <span class="block truncate font-medium text-heading group-hover:text-primary">{label}</span>
+                                                    {isPast(person) && <span class="block text-xs text-muted">Past member</span>}
+                                                </span>
                                             </a>
                                         ) : (
                                             <span class="team-row">

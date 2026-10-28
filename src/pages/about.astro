@@ -15,6 +15,7 @@ import uopLogo from "../assets/UOP_logo.png";
 import { site, statements, disciplines, ecosystem, leadership } from "../data/site";
 import { getResearchAreas } from "../lib/research";
 import { getAllPublications } from "../lib/publications";
+import { isPast } from "../lib/people";
 
 const [projects, publications, people] = await Promise.all([
     getCollection("projects"),
@@ -25,7 +26,7 @@ const stats = [
     { value: getResearchAreas().length, label: "Research areas" },
     { value: projects.length, label: "Research projects" },
     { value: publications.length, label: "Listed publications" },
-    { value: people.length, label: "People profiles" },
+    { value: people.filter((p) => !isPast(p)).length, label: "Current members" },
 ];
 
 // Link leadership names to published profiles where one exists.
