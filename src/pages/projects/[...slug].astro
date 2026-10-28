@@ -9,6 +9,7 @@ import PublicationItem from "../../components/PublicationItem.astro";
 import defaultAvatar from "../../assets/avatar_default.svg";
 import { publicationsForProject, projectLinkMap, groupByYear, normKey } from "../../lib/publications";
 import { getResearchAreas } from "../../lib/research";
+import { projectTeam } from "../../lib/people";
 
 export async function getStaticPaths() {
     const projects = await getCollection("projects");
@@ -21,20 +22,9 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { Content } = await render(project);
 
-// Team entries are matched to people profiles by email. Anything that doesn't resolve
-// renders as plain text, never as a dead "#" link (fixes B7).
-const people = await getCollection("people");
-const byEmail = new Map(people.map((p) => [p.data.email, p]));
-const resolve = (ref: string) => {
-    const person = byEmail.get(ref);
-    if (!person && ref.includes("@")) console.warn(`[projects/${project.id}] team email "${ref}" does not match a people profile`);
-    return { ref, person, label: person?.data.name ?? ref };
-};
-// An email without a profile is left out until that person adds one (never print the address,
-// decision D12); plain names are shown as given.
-const listed = (entry: ReturnType<typeof resolve>) => entry.person || !entry.ref.includes("@");
-const supervisors = project.data.supervisors.map(resolve).filter(listed);
-const members = project.data.projectMembers.map(resolve).filter(listed);
+// Team entries are matched to people profiles by any of their emails (src/lib/people.ts).
+// Plain names render as text, never as a dead "#" link (fixes B7).
+const { supervisors, members } = await projectTeam(project);
 
 // Papers listed under this project in the publications sheet (see src/lib/publications.ts).
 const projectPublications = await publicationsForProject(project);

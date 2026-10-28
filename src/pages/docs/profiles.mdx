@@ -18,17 +18,16 @@ marc_people/
         └── jane_doe.jpg
 ```
 
-<Callout title="Linking keys: keep these exactly the same">
+<Callout title="Linking keys: how your profile connects to projects and publications">
 
-Two values in your profile connect you to the rest of the site:
+- **Emails link you to projects.** Projects list their team by email address. The website matches each
+  address to the profile whose `email`, **or any address in `otherEmails`**, is the same.
+- **Names link you to publications.** A paper appears on your profile when its Authors column contains
+  your `name`, **or any form in `otherNames`** (for example `Doe, J.` or `J. A. Doe`).
 
-- **`email`** links you to **projects**. Projects list their team by email, and the website matches
-  each address to the profile with exactly the same `email`.
-- **`name`** links you to **publications**. A paper appears on your profile when its Authors column in
-  the publications sheet contains this full name.
-
-If either one changes without the other side being updated, your projects or papers quietly disappear
-from your profile. See [Changing a linking key safely](#changing-a-linking-key-safely).
+So list every address projects might use, and every form of your name used in your papers. Nothing then
+drops off your profile, even when people write your address or name differently.
+See [Other emails and names](#other-emails-and-names).
 
 </Callout>
 
@@ -38,9 +37,13 @@ You can do everything in the browser:
 
 1. Open your file in [`profiles/`](https://github.com/pdnMARC/marc_people/tree/main/profiles) and click the pencil icon (**Edit this file**).
 2. Sign in to GitHub if asked. If you are not a member of the repository, GitHub offers to fork it for you. Accept.
-3. Change your biography or the safe-to-change fields. Leave `email` and `name` as they are.
+3. Change what you need. To replace your `email` or `name`, keep the old one in `otherEmails` or
+   `otherNames` (see [Changing your email or name](#changing-your-email-or-name)).
 4. Click **Commit changes…**, choose to create a new branch, then **Create pull request**.
 5. When a MARC maintainer merges it, the website rebuilds and your changes go live.
+
+Joined or left a project? That is changed in the project's file, not in your profile. See
+[Add yourself to your projects](#add-yourself-to-your-projects).
 
 To change your photo, first upload the new image to
 [`profiles/photos/`](https://github.com/pdnMARC/marc_people/tree/main/profiles/photos)
@@ -57,6 +60,12 @@ email: jane.doe@eng.pdn.ac.lk
 post: Research Assistant
 name: Jane Doe
 photo: ./photos/jane_doe.jpg
+otherEmails:
+  - e19999@eng.pdn.ac.lk
+  - jane.doe@gmail.com
+otherNames:
+  - "Doe, J."
+  - "J. A. Doe"
 ---
 Jane Doe is a Research Assistant at MARC working on ...
 
@@ -66,20 +75,100 @@ Jane Doe is a Research Assistant at MARC working on ...
 - Remote sensing
 ```
 
-Before you save, check the two linking keys:
+`otherEmails` and `otherNames` are optional: leave them out if you have nothing to add. Before you save,
+check the linking keys:
 
-- **`email`**: the address your project leads use (or will use) in their project files. Write it in
-  lower case. If you are already listed on a project, copy the address from that project file.
-- **`name`**: your name as it appears in the author lists of your papers, for example `Jane Doe`.
+- **`email`**: your main address. If you are already listed on a project, use the address in that project
+  file, or add it to `otherEmails`.
+- **`otherEmails`**: any other address a project file may list for you: a student address, an old
+  address, a personal one.
+- **`name`**: your name as you want it shown, for example `Jane Doe`.
+- **`otherNames`**: every other way your name is written in the author lists of your papers.
+
+Then [add yourself to your projects](#add-yourself-to-your-projects). Your profile does not say which
+projects you are on, so that is a second, separate change.
+
+## Other emails and names
+
+People are often written down in more than one way: a student address and a staff address, or
+`Jane Doe` in one paper and `Doe, J. A.` in another. List the extra forms so the website can connect them
+all to you.
+
+```yaml
+otherEmails:
+  - e19999@eng.pdn.ac.lk
+otherNames:
+  - "Doe, J."
+  - "J. A. Doe"
+  - "D. M. J. A. Doe"
+```
+
+- **Copy name forms from your papers' author lists.** Upper and lower case, full stops and spacing are
+  ignored, so `J.A. Doe`, `J. A. Doe` and `j a doe` are the same form.
+- **Make each name form specific to you.** It must have at least two words, and it must not match
+  another MARC member: if a colleague could also be `Doe, J.`, use the longer form with all your
+  initials. The automatic check stops two profiles from sharing a name form.
+- **Each email belongs to one person.** The check stops an address from appearing in two profiles.
+- Put quotes around name forms that contain a comma, as in the examples.
+- Emails are never shown on the website, and `otherNames` are only used for matching.
+
+## Add yourself to your projects
+
+Each project file lists its own team; your profile does not. To appear on a project's page, and to have
+the project appear on your profile, one of your addresses (`email` or any of `otherEmails`) must be in
+that project's file in the [marc_projects repository](https://github.com/pdnMARC/marc_projects/tree/main/projects).
+
+1. Find your project's file. Its name is in the project's page address: `/projects/inr/` is `INR.md`.
+2. Open it in [`projects/`](https://github.com/pdnMARC/marc_projects/tree/main/projects) and click the pencil icon.
+3. Add your email, **copied from your profile**, under `projectMembers` if you are a researcher or
+   `supervisors` if you supervise the project.
+4. Commit to a new branch and open a pull request in marc_projects.
+
+If the list is empty (`[]`), replace the brackets with a list. Before:
+
+```yaml
+projectMembers: []
+```
+
+After:
+
+```yaml
+projectMembers:
+  - jane.doe@eng.pdn.ac.lk
+```
+
+If it already has people, add one line for yourself at the end:
+
+```yaml
+projectMembers:
+  - researcher1@eng.pdn.ac.lk
+  - jane.doe@eng.pdn.ac.lk
+```
+
+Each line starts with two spaces, a dash and a space. Don't change anyone else's line.
+
+- **Already listed under another address?** No need to change the project: add that address to your
+  `otherEmails` instead.
+- **Two pull requests.** Your profile (marc_people) and the project file (marc_projects) are in
+  different repositories. They can be merged in either order: you appear on the project once both are
+  merged.
+- **Several projects?** Repeat the steps for each project file.
+- **Leaving a project, or becoming a supervisor?** Remove your line from that list, or move it from
+  `projectMembers` to `supervisors`, the same way.
 
 ## Fields
 
-**Linking keys**: other content refers to these. Change them only as described below.
+**Linking keys**: other content refers to these. Add to them freely; remove or replace a value only as
+described in [Changing your email or name](#changing-your-email-or-name).
 
 | Field | Required | Linked from | Purpose |
 | --- | --- | --- | --- |
-| `email` | Yes | `projectMembers` and `supervisors` in [project files](/docs/projects/) | Your unique identifier. Must be exactly the address projects use, letter for letter. Never shown on the website. |
-| `name` | Yes | The `Authors` column of the [publications sheet](/docs/publications/) | Your display name, and how your papers are found. Titles such as Prof. or Dr. are ignored when matching. |
+| `email` | Yes | `projectMembers` and `supervisors` in [project files](/docs/projects/) | Your main address and unique identifier. Never shown on the website. |
+| `otherEmails` | No | The same project lists | Extra addresses projects may use for you, one per line. Each address may appear in only one profile. |
+| `name` | Yes | The `Authors` column of the [publications sheet](/docs/publications/) | Your display name, and the first form used to find your papers. Titles such as Prof. or Dr. are ignored. |
+| `otherNames` | No | The same Authors column | Other forms of your name in author lists, one per line, at least two words each. |
+
+Email matching ignores upper and lower case, so `Jane.Doe@…` and `jane.doe@…` are the same address.
 
 **Safe to change** at any time:
 
@@ -93,19 +182,31 @@ The **file name** sets your page address: `Jane_Doe.md` becomes `/people/jane_do
 depends on it, but renaming the file changes the address, so links shared elsewhere (a CV, an email
 signature) stop working.
 
-## Changing a linking key safely
+## Changing your email or name
 
-**Your email address changes.** Update both sides at the same time:
+Never just delete an old address or name form: move it to the "other" list, and every existing link keeps
+working without touching any project file or the publications sheet.
 
-1. Find every project that lists your old address: search the
-   [marc_projects repository](https://github.com/pdnMARC/marc_projects) on GitHub for it.
-2. Open one pull request in marc_projects replacing the old address with the new one in each of those
-   files, and one in marc_people changing your `email`.
-3. Ask the maintainer to merge both together.
+**Your main email changes.** Put the new address in `email` and move the old one to `otherEmails`:
 
-**Your name changes, or is written differently in your papers.** Papers are matched on the full name, so
-keep `name` as it is written in your author lists. If you change it, papers listed under the old form of
-your name no longer appear on your profile until their Authors entries use the new one.
+```yaml
+email: jane.doe@pdn.ac.lk
+otherEmails:
+  - jane.doe@eng.pdn.ac.lk
+```
+
+**Your name changes, or you want it shown differently.** Put the new form in `name` and move the old one
+to `otherNames`:
+
+```yaml
+name: Jane Perera
+otherNames:
+  - "Jane Doe"
+  - "Doe, J."
+```
+
+Remove an old value only when nothing uses it any more: no project file lists that address, and no
+paper lists that form of your name.
 
 ## Photo tips
 
@@ -117,15 +218,19 @@ your name no longer appear on your profile until their Authors entries use the n
 ## What appears on your profile
 
 - **Associated projects**: every project whose `projectMembers` or `supervisors` list contains your
-  `email`. See [Projects](/docs/projects/).
-- **Publications**: papers in the publications sheet whose Authors column contains your full `name`.
-  See [Publications](/docs/publications/).
+  `email` or one of your `otherEmails`. See [Projects](/docs/projects/).
+- **Publications**: papers in the publications sheet whose Authors column contains your `name` or one of
+  your `otherNames` as a whole name. See [Publications](/docs/publications/).
 
 ## If the check fails
 
 When you open a pull request, an automatic check validates every profile. If it fails, open the
-**Checks** tab of the pull request to see which file and field to fix. The most common problems are a
-`post` that is not one of the four roles, an `email` already used by another profile, a `photo` path
-that does not match the file, or a profile saved outside the `profiles/` folder.
+**Checks** tab of the pull request to see which file and field to fix. The most common problems:
+
+- a `post` that is not one of the four roles;
+- an address (in `email` or `otherEmails`) already used by another profile;
+- a name form already used by another profile, or one with only one word;
+- a `photo` path that does not match the file;
+- a profile saved outside the `profiles/` folder.
 
 More detail: the [marc_people README](https://github.com/pdnMARC/marc_people#readme).

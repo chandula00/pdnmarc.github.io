@@ -22,7 +22,8 @@ marc_projects/
 A project file connects to three other kinds of content:
 
 - **`projectMembers` and `supervisors`** link the project to **people**. Each entry is an email
-  address that must be exactly the `email` in that person's profile.
+  address that must be the `email`, or one of the `otherEmails`, in that person's profile (upper and
+  lower case don't matter).
 - **The file name** (and the `project` title) link the project to its **publications**. The tab for
   this project in the publications sheet is matched to the file name or the title. The file name is
   also the page address, `/projects/<file-name>/`, and how the home page highlights refer to the
@@ -74,8 +75,8 @@ What the team is doing, and any results so far.
 
 | Field | Required | Must match | Purpose |
 | --- | --- | --- | --- |
-| `projectMembers` | Yes | The `email` in each researcher's [profile](/docs/profiles/) | The researchers on the project, as a list of email addresses. Use `[]` for none. |
-| `supervisors` | Yes | The `email` in each supervisor's [profile](/docs/profiles/) | The supervisors, as a list of email addresses. Use `[]` for none. |
+| `projectMembers` | Yes | The `email` or one of the `otherEmails` in each researcher's [profile](/docs/profiles/) | The researchers on the project, as a list of email addresses. Use `[]` for none. |
+| `supervisors` | Yes | The `email` or one of the `otherEmails` in each supervisor's [profile](/docs/profiles/) | The supervisors, as a list of email addresses. Use `[]` for none. |
 | `researchArea` | Yes | One of `Biomedical Engineering and Wearables`, `Computer Vision`, `Generative AI`, `Multispectral Imaging`, `Smart Grid`, `Socioeconomic` | Places the project on that research area's page and gives it the area's colour. |
 | File name | Yes | The project's tab in the [publications sheet](/docs/publications/) | The page address (`Example_Project.md` → `/projects/example_project/`) and the main way publications are linked. |
 | `project` | Yes | The publications tab, if the tab uses the title rather than the file name | The project title on cards and the project page. |
@@ -91,10 +92,12 @@ What the team is doing, and any results so far.
 ## The project team
 
 Team members are listed by **email address**, and each address is matched to a profile in
-[marc_people](/docs/profiles/). On the project page:
+[marc_people](/docs/profiles/) by the profile's `email` or any of its `otherEmails`. On the project page:
 
 - people with a profile appear with their photo, name and role, linking to their profile;
-- an email with no matching profile is left out until that person adds their profile.
+- an email with no matching profile is left out until that person adds their profile, or adds that
+  address to their `otherEmails`;
+- a person listed twice, under two of their addresses, appears once.
 
 So:
 
@@ -103,6 +106,31 @@ So:
   you listed here.
 
 Email addresses are never shown on the website.
+
+### Adding or removing a team member
+
+Team membership is recorded **only in the project file**. A person's profile does not list their
+projects; the website works it out from these lists.
+
+1. Open the project file and click the pencil icon.
+2. To add someone, add a line with their email, copied from their profile, under `projectMembers` or
+   `supervisors`. If the list is `[]`, replace the brackets with the list:
+
+   ```yaml
+   projectMembers:
+     - researcher1@eng.pdn.ac.lk
+     - new.member@eng.pdn.ac.lk
+   supervisors:
+     - supervisor@eng.pdn.ac.lk
+   ```
+
+3. To remove someone, delete their line. To make a researcher a supervisor, move their line from
+   `projectMembers` to `supervisors`.
+4. Commit to a new branch and open a pull request.
+
+If the new member has no profile yet, they also [add one](/docs/profiles/#add-a-new-profile) in
+marc_people with the same email. The two pull requests can be merged in either order; the person
+appears on the project page once both are in.
 
 ## Changing a linking key safely
 
@@ -118,8 +146,12 @@ updated in the same go:
 **Changing the `project` title.** Safe as long as the publications tab still matches the file name. If
 the tab was named after the old title, rename the tab too.
 
-**Changing a team member's email.** Change it in their profile and in every project that lists it, and
-merge both together. See [Profiles](/docs/profiles/#changing-a-linking-key-safely).
+**A team member's email changes.** Nothing to do here: they move the old address to `otherEmails` in
+their profile, and this project keeps linking to them. See
+[Changing your email or name](/docs/profiles/#changing-your-email-or-name).
+
+**A team member is listed under an address their profile doesn't have.** Ask them to add that address
+to their `otherEmails`, rather than editing every project.
 
 **Moving the project to another research area.** Change `researchArea` to another of the six names,
 spelled exactly as listed above.

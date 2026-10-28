@@ -14,12 +14,14 @@ website reads every time it rebuilds. Ask a maintainer for edit access.
 - **The tab name** links a paper to a **project**. It must be the project's file name (or its title) in
   [marc_projects](/docs/projects/). The `NILM` tab, for example, belongs to `NILM.md`.
 - **The Authors column** links a paper to **people**. A paper appears on a profile when this column
-  contains the full `name` from that person's [profile](/docs/profiles/), for example `Athulya Ratnayake`.
+  contains that person's `name`, or one of their `otherNames`, from their [profile](/docs/profiles/):
+  `Athulya Ratnayake`, or a listed form such as `Ratnayake, A.`.
 - **The DOI** (or, without one, the title) identifies the paper. When the same paper is listed in two
   tabs, the website shows it once and links it to both projects, but only if the DOI, or the title,
   is identical in both rows.
 
-Renaming a tab, abbreviating an author's name or retyping a DOI differently breaks the matching link.
+Renaming a tab or retyping a DOI differently breaks the matching link. An author name written in a new
+way is fine once that form is in the person's `otherNames`.
 
 </Callout>
 
@@ -36,7 +38,7 @@ Renaming a tab, abbreviating an author's name or retyping a DOI differently brea
 | --- | --- | --- |
 | `Paper Title` | Yes, when there is no DOI | The full title. Rows without a title are skipped. |
 | `DOI` | Yes | The DOI (for example `10.1109/ACCESS.2024.1234567`) or, if there is none, a link to the paper. |
-| `Authors` | Yes | All authors, as in the paper. Write MARC members' names in full, as in their profiles (`Athulya Ratnayake`, not `A. Ratnayake`), so the paper appears on their profile. |
+| `Authors` | Yes | All authors, exactly as in the paper. MARC members are found by their profile's `name` and `otherNames`. |
 | `Journal/Conference` | No | `Journal` or `Conference`. |
 | `Journal/Conference Name` | No | The venue, including the year where it has one, for example `2024 Moratuwa Engineering Research Conference (MERCon)`. |
 | `Review Status` | No | `Published`, `Accepted` or `Under review`. |
@@ -58,12 +60,20 @@ it). If you rename a tab, check that it still matches its project's file name or
 
 ## Linking papers to people
 
-A paper appears on a person's profile when its `Authors` column contains the full name from their
-profile. Titles such as Prof. or Dr. are ignored. Authors written with initials only (`Ratnayake, A.`)
-are not matched, so write MARC members' names in full.
+A paper appears on a person's profile when its `Authors` column contains their `name` or one of their
+`otherNames` as a whole name. Upper and lower case, full stops, spacing and titles such as Prof. or Dr.
+are ignored, so `G.M.R.I. Godaliyadda` and `G. M. R. I. Godaliyadda` count as the same form.
 
-If someone changes the `name` in their profile, papers that list them under the old name no longer
-appear on their profile until those Authors entries are updated.
+Keep the Authors column exactly as in the paper. When a member's papers use a form the website doesn't
+know yet (initials, surname first, a maiden name), the member adds it to `otherNames` in their profile:
+
+```yaml
+otherNames:
+  - "Ratnayake, A."
+  - "R. M. A. Ratnayake"
+```
+
+See [Other emails and names](/docs/profiles/#other-emails-and-names).
 
 ## How the year is worked out
 

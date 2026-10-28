@@ -52,6 +52,10 @@ const people = defineCollection({
         post: z.string(),
         name: z.string(),
         photo: image().optional(),
+        // Optional aliases for linking (src/lib/people.ts): extra addresses projects may use,
+        // and other forms of the name used in author lists.
+        otherEmails: z.array(z.string().email()).default([]),
+        otherNames: z.array(z.string()).default([]),
     })
 
 });

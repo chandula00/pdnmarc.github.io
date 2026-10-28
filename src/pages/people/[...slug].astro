@@ -8,6 +8,7 @@ import Icon from "../../components/ui/Icon.astro";
 import PublicationItem from "../../components/PublicationItem.astro";
 import defaultAvatar from "../../assets/avatar_default.svg";
 import { publicationsForPerson, projectLinkMap } from "../../lib/publications";
+import { isOnProject } from "../../lib/people";
 
 export async function getStaticPaths() {
     const people = await getCollection("people");
@@ -20,15 +21,11 @@ export async function getStaticPaths() {
 const { person } = Astro.props;
 const { Content } = await render(person);
 
-// Email stays the join key for projects and publications, but is not shown (decision D12).
+// Emails (primary and otherEmails) are the join key for projects, but are never shown (decision D12).
 const projects = await getCollection("projects");
-const personProjects = projects.filter(
-    (project) =>
-        project.data.projectMembers.includes(person.data.email) ||
-        project.data.supervisors.includes(person.data.email),
-);
+const personProjects = projects.filter((project) => isOnProject(person, project));
 
-// Matched by email (original sheet) or by full name in the author list (src/lib/publications.ts).
+// Matched by email (original sheet) or by name / otherNames in the author list (src/lib/people.ts).
 const personPublications = await publicationsForPerson(person);
 const links = await projectLinkMap();
 
