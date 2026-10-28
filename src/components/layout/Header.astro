@@ -2,7 +2,7 @@
 // Sticky header + navigation drawer (spec §6.3). Behaviour lives in src/scripts/chrome.ts.
 // Without JS the menu button is a link to #site-drawer and the drawer opens via :target.
 import { Image } from "astro:assets";
-import logo from "../../assets/logo.png";
+import wordmark from "../../assets/marc-wordmark.png";
 import Icon from "../ui/Icon.astro";
 import Button from "../ui/Button.astro";
 import ThemeToggle from "./ThemeToggle.astro";
@@ -31,9 +31,11 @@ const closeHref = Astro.url.pathname;
         </a>
 
         <a href="/" class="brand">
-            <Image src={logo} alt="" width={80} height={80} class="brand__logo" loading="eager" />
-            <span class="brand__name">MARC</span>
-            <span class="brand__sub">AI Research Centre</span>
+            <Image src={wordmark} alt="MARC" height={88} class="brand__logo" loading="eager" fetchpriority="high" />
+            <span class="brand__text">
+                <span class="brand__name">Multidisciplinary AI Research Centre</span>
+                <span class="brand__uni">University of Peradeniya</span>
+            </span>
         </a>
 
         <nav aria-label="Primary" class="nav-desktop">
@@ -62,7 +64,7 @@ const closeHref = Astro.url.pathname;
     <div class="drawer__scrim js-only" data-drawer-close aria-hidden="true"></div>
     <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="Site menu">
         <div class="drawer__head">
-            <span class="drawer__title">MARC</span>
+            <Image src={wordmark} alt="MARC" height={64} class="drawer__logo" />
             <button type="button" class="icon-btn js-only" data-drawer-close aria-label="Close menu">
                 <Icon name="material-symbols:close" />
             </button>
@@ -133,25 +135,31 @@ const closeHref = Astro.url.pathname;
         padding: 4px 8px 4px 0;
         border-radius: 999px;
     }
+    /* MAiRC wordmark + two-line name in Barlow Condensed (the MARC brand lock-up). */
     .brand :global(.brand__logo) {
-        width: 40px;
+        width: auto;
         height: 40px;
-        border-radius: 50%;
-        box-shadow: 0 0 0 1px var(--color-line);
+    }
+    .brand__text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+        font-family: var(--font-brand);
+        text-transform: uppercase;
+        line-height: 1.05;
+        white-space: nowrap;
     }
     .brand__name {
-        font-family: var(--font-head);
-        font-weight: 700;
-        font-size: 1.25rem;
-        letter-spacing: -0.01em;
+        font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: 0.02em;
         color: var(--color-heading);
     }
-    .brand__sub {
-        padding-left: 0.625rem;
-        border-left: 1px solid var(--color-line);
-        font-size: 0.9375rem;
+    .brand__uni {
+        font-weight: 500;
+        font-size: 0.8125rem;
+        letter-spacing: 0.04em;
         color: var(--color-muted);
-        white-space: nowrap;
     }
 
     .nav-desktop {
@@ -220,16 +228,19 @@ const closeHref = Astro.url.pathname;
             display: inline-flex;
         }
     }
-    @media (min-width: 1081px) and (max-width: 1279px) {
-        .brand__sub {
+    /* The full menu needs the room: show the wording beside the wordmark only from 1400px. */
+    @media (min-width: 1081px) and (max-width: 1399px) {
+        .brand__text {
             display: none;
         }
+    }
+    @media (min-width: 1081px) and (max-width: 1279px) {
         .nav-link {
             padding: 0 0.625rem;
         }
     }
     @media (max-width: 560px) {
-        .brand__sub {
+        .brand__text {
             display: none;
         }
     }
@@ -289,11 +300,9 @@ const closeHref = Astro.url.pathname;
         justify-content: space-between;
         padding: 0.75rem 0.75rem 0.5rem 1.75rem;
     }
-    .drawer__title {
-        font-family: var(--font-head);
-        font-weight: 700;
-        font-size: 1.125rem;
-        color: var(--color-heading);
+    .drawer__head :global(.drawer__logo) {
+        width: auto;
+        height: 32px;
     }
     .drawer__links {
         padding: 0.25rem 0.75rem;

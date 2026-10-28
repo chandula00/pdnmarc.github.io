@@ -13,14 +13,20 @@ import { z } from 'astro/zod';
 //   MARC_CONTENT_ROOT=.. npm run dev   → reads ../marc_projects, ../marc_people and ../marc_news
 // Without the variable the committed src/collection_* folders are used, exactly as before.
 const contentRoot = process.env.MARC_CONTENT_ROOT?.replace(/\/+$/, '');
-const contentDir = (repo: string, fallback: string) => (contentRoot ? `${contentRoot}/${repo}/` : fallback);
+// Each content repo keeps its Markdown (and images) in a subfolder: marc_projects/projects,
+// marc_people/profiles, marc_news/articles. Checkouts from before that move have it at the
+// repo root, so fall back to the root when the subfolder is missing.
+const contentDir = (repo: string, subfolder: string, fallback: string) => {
+    const root = contentRoot ? `${contentRoot}/${repo}/` : fallback;
+    return fs.existsSync(path.join(root, subfolder)) ? `${root}${subfolder}/` : root;
+};
 
 // 4. Define your collection(s)
 const projects = defineCollection({
     loader: glob(
         {
             pattern: ['**/!([Rr][Ee][Aa][Dd][Mm][Ee]).md', '!**/node_modules/**'], // skip a content repo's own npm install
-            base: contentDir("marc_projects", "src/collection_projects/")
+            base: contentDir("marc_projects", "projects", "src/collection_projects/")
         }
     ),
     schema: ({ image }) => z.object({
@@ -38,7 +44,7 @@ const people = defineCollection({
     loader: glob(
         {
             pattern: ['**/!([Rr][Ee][Aa][Dd][Mm][Ee]).md', '!**/node_modules/**'], // skip a content repo's own npm install
-            base: contentDir("marc_people", "src/collection_people/")
+            base: contentDir("marc_people", "profiles", "src/collection_people/")
         }
     ),
     schema: ({ image }) => z.object({
@@ -109,13 +115,17 @@ const news = defineCollection({
     // Load markdown files from your specific folder
     loader: glob({
         pattern: ['**/!([Rr][Ee][Aa][Dd][Mm][Ee]).md', '!**/node_modules/**'], // skip a content repo's own npm install
-        base: contentDir("marc_news", "src/collection_news/")
+        base: contentDir("marc_news", "articles", "src/collection_news/")
     }),
     schema: ({ image }) => z.object({
         title: z.string(),
         date: z.date(), // Zod will automatically parse the YYYY-MM-DD string
         cover: image().optional(), // Validate the cover image exists
         short: z.string(), // The summary for the card
+        // Optional, for vacancies and calls (listed on /vacancies, see src/lib/vacancies.ts)
+        vacancy: z.boolean().default(false),
+        deadline: z.date().optional(), // last day to apply, YYYY-MM-DD
+        apply: z.string().regex(/^(https?:\/\/|mailto:)/, "apply must start with https:// or mailto:").optional(), // application link
     })
 });
 // 5. Export a single `collections` object to register your collection(s)

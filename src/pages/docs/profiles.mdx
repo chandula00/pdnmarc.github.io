@@ -1,0 +1,131 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: People profiles
+description: Add yourself to the People page, or update your photo, role and biography, without breaking the links to your projects and publications.
+---
+
+import Callout from "../../components/ui/Callout.astro";
+
+Each person at MARC keeps their own profile up to date. Profiles live in the
+[marc_people repository](https://github.com/pdnMARC/marc_people) on GitHub: one Markdown file per person
+in the `profiles/` folder, with photos in `profiles/photos/`.
+
+```text
+marc_people/
+└── profiles/
+    ├── Jane_Doe.md
+    └── photos/
+        └── jane_doe.jpg
+```
+
+<Callout title="Linking keys: keep these exactly the same">
+
+Two values in your profile connect you to the rest of the site:
+
+- **`email`** links you to **projects**. Projects list their team by email, and the website matches
+  each address to the profile with exactly the same `email`.
+- **`name`** links you to **publications**. A paper appears on your profile when its Authors column in
+  the publications sheet contains this full name.
+
+If either one changes without the other side being updated, your projects or papers quietly disappear
+from your profile. See [Changing a linking key safely](#changing-a-linking-key-safely).
+
+</Callout>
+
+## Update your profile
+
+You can do everything in the browser:
+
+1. Open your file in [`profiles/`](https://github.com/pdnMARC/marc_people/tree/main/profiles) and click the pencil icon (**Edit this file**).
+2. Sign in to GitHub if asked. If you are not a member of the repository, GitHub offers to fork it for you. Accept.
+3. Change your biography or the safe-to-change fields. Leave `email` and `name` as they are.
+4. Click **Commit changes…**, choose to create a new branch, then **Create pull request**.
+5. When a MARC maintainer merges it, the website rebuilds and your changes go live.
+
+To change your photo, first upload the new image to
+[`profiles/photos/`](https://github.com/pdnMARC/marc_people/tree/main/profiles/photos)
+(**Add file → Upload files**), then point `photo:` at it.
+
+## Add a new profile
+
+In the `profiles/` folder, click **Add file → Create new file**, name it after yourself (for example
+`Jane_Doe.md`) and start from this template:
+
+```md
+---
+email: jane.doe@eng.pdn.ac.lk
+post: Research Assistant
+name: Jane Doe
+photo: ./photos/jane_doe.jpg
+---
+Jane Doe is a Research Assistant at MARC working on ...
+
+## Research interests
+
+- Computer vision
+- Remote sensing
+```
+
+Before you save, check the two linking keys:
+
+- **`email`**: the address your project leads use (or will use) in their project files. Write it in
+  lower case. If you are already listed on a project, copy the address from that project file.
+- **`name`**: your name as it appears in the author lists of your papers, for example `Jane Doe`.
+
+## Fields
+
+**Linking keys**: other content refers to these. Change them only as described below.
+
+| Field | Required | Linked from | Purpose |
+| --- | --- | --- | --- |
+| `email` | Yes | `projectMembers` and `supervisors` in [project files](/docs/projects/) | Your unique identifier. Must be exactly the address projects use, letter for letter. Never shown on the website. |
+| `name` | Yes | The `Authors` column of the [publications sheet](/docs/publications/) | Your display name, and how your papers are found. Titles such as Prof. or Dr. are ignored when matching. |
+
+**Safe to change** at any time:
+
+| Field | Required | Purpose |
+| --- | --- | --- |
+| `post` | Yes | Your role. Use exactly one of `Director`, `Deputy Director`, `Research Assistant` or `Volunteer`. The People page groups people by role. |
+| `photo` | No | Path to your photo, starting with `./photos/`. Without one, a neutral avatar is shown. |
+| Biography | No | Everything below the closing `---`, in Markdown: paragraphs, headings, lists, links and images. If empty, the Biography section is not shown. |
+
+The **file name** sets your page address: `Jane_Doe.md` becomes `/people/jane_doe/`. Nothing on the site
+depends on it, but renaming the file changes the address, so links shared elsewhere (a CV, an email
+signature) stop working.
+
+## Changing a linking key safely
+
+**Your email address changes.** Update both sides at the same time:
+
+1. Find every project that lists your old address: search the
+   [marc_projects repository](https://github.com/pdnMARC/marc_projects) on GitHub for it.
+2. Open one pull request in marc_projects replacing the old address with the new one in each of those
+   files, and one in marc_people changing your `email`.
+3. Ask the maintainer to merge both together.
+
+**Your name changes, or is written differently in your papers.** Papers are matched on the full name, so
+keep `name` as it is written in your author lists. If you change it, papers listed under the old form of
+your name no longer appear on your profile until their Authors entries use the new one.
+
+## Photo tips
+
+- Use a `.jpg`, `.jpeg` or `.png` file, ideally square and at least 400 × 400 pixels.
+- Photos are shown in a circle, so keep your face near the centre and towards the top.
+- The `photo` path must match the file name exactly, including upper and lower case: the website is
+  built on a system where `Jane.JPG` and `jane.jpg` are different files.
+
+## What appears on your profile
+
+- **Associated projects**: every project whose `projectMembers` or `supervisors` list contains your
+  `email`. See [Projects](/docs/projects/).
+- **Publications**: papers in the publications sheet whose Authors column contains your full `name`.
+  See [Publications](/docs/publications/).
+
+## If the check fails
+
+When you open a pull request, an automatic check validates every profile. If it fails, open the
+**Checks** tab of the pull request to see which file and field to fix. The most common problems are a
+`post` that is not one of the four roles, an `email` already used by another profile, a `photo` path
+that does not match the file, or a profile saved outside the `profiles/` folder.
+
+More detail: the [marc_people README](https://github.com/pdnMARC/marc_people#readme).

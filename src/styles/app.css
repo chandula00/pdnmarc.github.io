@@ -94,6 +94,8 @@
     --font-head: "Manrope Variable", "Manrope", "Inter Variable", ui-sans-serif, system-ui,
         sans-serif;
     --font-serif: ui-serif, Georgia, "Times New Roman", serif;
+    /* Brand lock-up beside the MAiRC wordmark (header). */
+    --font-brand: "Barlow Condensed", "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
 
     --breakpoint-nav: 67.5625rem; /* 1081px — nav collapses to the drawer at ≤ 1080px */
 

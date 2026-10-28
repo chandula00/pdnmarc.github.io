@@ -1,7 +1,6 @@
 ---
 // Person tile (spec §9.9): round photo, name, role — the layout Google uses on team pages.
-// Emails are never printed (decision D12). No photo → neutral avatar with the visible text
-// "Photograph not available" (image alt="" so it is announced once).
+// Emails are never printed (decision D12). No photo → neutral avatar icon.
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import Icon from "./ui/Icon.astro";
@@ -32,7 +31,6 @@ const { name, role, href, photo, affiliation, headingLevel: H = "h3" } = Astro.p
     <H class="person__name">{name}</H>
     <p class="person__role">{role}</p>
     {affiliation && <p class="person__aff">{affiliation}</p>}
-    {!photo && <p class="person__note">Photograph not available</p>}
 </a>
 
 <style>
@@ -89,8 +87,7 @@ const { name, role, href, photo, affiliation, headingLevel: H = "h3" } = Astro.p
         font-size: 0.875rem;
         color: var(--color-body);
     }
-    .person__aff,
-    .person__note {
+    .person__aff {
         margin-top: 0.125rem;
         font-size: 0.8125rem;
         color: var(--color-muted);

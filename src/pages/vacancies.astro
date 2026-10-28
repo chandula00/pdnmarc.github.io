@@ -1,0 +1,219 @@
+---
+// Vacancies & opportunities: open calls from marc_news (`vacancy: true`, until their deadline)
+// and the standing ways to join or volunteer. See src/lib/vacancies.ts.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/ui/Icon.astro";
+import Button from "../components/ui/Button.astro";
+import Todo from "../components/ui/Todo.astro";
+import VacancyCard from "../components/VacancyCard.astro";
+import { getOpenVacancies } from "../lib/vacancies";
+import { site, socials } from "../data/site";
+
+const vacancies = await getOpenVacancies();
+// Pre-filled email: a subject that says what the enquiry is about, and a short outline so MARC
+// gets the details it needs to route it.
+const mailto = (subject: string) =>
+    `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+        "Name:\nAffiliation / institution:\nArea of interest:\n\nMessage:\n",
+    )}`;
+
+// Who MARC welcomes (site.ts `audiences`, spec §7.1-10), plus volunteers, with a pre-filled email for each.
+const routes = [
+    { icon: "material-symbols:school-outline", title: "Students", text: "Undergraduate & postgraduate research", subject: "Enquiry: Student research opportunities at MARC" },
+    { icon: "material-symbols:volunteer-activism-outline", title: "Volunteers", text: "Volunteer with the Centre", subject: "Enquiry: Volunteering at MARC" },
+    { icon: "material-symbols:biotech-outline", title: "Academics", text: "Joint and multidisciplinary research", subject: "Enquiry: Academic research collaboration with MARC" },
+    { icon: "material-symbols:apartment", title: "Industry", text: "Applied AI & commercialization", subject: "Enquiry: Industry partnership with MARC" },
+    { icon: "material-symbols:language", title: "International", text: "Institutional partnerships", subject: "Enquiry: International partnership with MARC" },
+];
+const follow = socials.filter((s) => s.key === "linkedin" || s.key === "facebook");
+---
+
+<BaseLayout
+    title="Vacancies & opportunities"
+    description="Open vacancies and calls at the Multidisciplinary AI Research Centre, and how students, volunteers and partners can join MARC."
+    breadcrumbs={[{ label: "Vacancies" }]}
+    header={{
+        eyebrow: "Join MARC",
+        title: "Vacancies & opportunities",
+        subtitle: "Open positions and calls at the Multidisciplinary AI Research Centre, and the ways to get involved.",
+    }}
+>
+    <section aria-labelledby="open">
+        <div class="mb-8 flex items-center gap-4">
+            <h2 id="open" class="text-h3 shrink-0">Open vacancies</h2>
+            <div class="divider-soft"></div>
+        </div>
+
+        <ul class="flex flex-col gap-6" data-vacancy-list="no-vacancies" hidden={vacancies.length === 0}>
+            {vacancies.map((item) => <VacancyCard item={item} />)}
+        </ul>
+
+        <div id="no-vacancies" class="empty card-surface" hidden={vacancies.length > 0}>
+            <span class="empty__icon"><Icon name="material-symbols:work-outline" /></span>
+            <div>
+                <p class="text-h4">There are no open vacancies right now</p>
+                <p class="mt-1">
+                    New openings are posted here and in <a href="/news/" class="text-primary underline">MARC news</a>. You
+                    can still get in touch using the options below.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="mt-16 lg:mt-24" aria-labelledby="involved">
+        <div class="max-w-3xl">
+            <p class="eyebrow mb-2">Get involved</p>
+            <h2 id="involved" class="text-h2">Ways to join MARC</h2>
+            <p class="text-lede mt-4">
+                MARC welcomes researchers, academics, students, industry partners and international collaborators.
+            </p>
+        </div>
+        <ul class="routes mt-8">
+            {
+                routes.map((r) => (
+                    <li class="route card-surface">
+                        <span class="route__icon">
+                            <Icon name={r.icon} />
+                        </span>
+                        <h3 class="text-h4 mt-4">{r.title}</h3>
+                        <p class="mt-1 text-[0.9375rem]">{r.text}</p>
+                        <a href={mailto(r.subject)} class="link-arrow mt-auto pt-4 text-sm">
+                            Email MARC <Icon name="material-symbols:arrow-forward" />
+                            <span class="sr-only"> about {r.title.toLowerCase()}</span>
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+        <Todo ref="§18" class="mt-6">
+            Volunteer and student programme details: eligibility, time commitment, selection process and any recurring
+            intake dates.
+        </Todo>
+    </section>
+
+    <section class="howto surface-tonal mt-16 lg:mt-24" aria-labelledby="how">
+        <h2 id="how" class="text-h2">How to express interest</h2>
+        <ol class="howto__list mt-8">
+            <li>
+                <span class="howto__num" aria-hidden="true">1</span>
+                <div>
+                    <h3 class="text-h4">Check the open vacancies</h3>
+                    <p class="mt-1">
+                        For a listed vacancy, follow the instructions in the announcement and apply before its deadline.
+                    </p>
+                </div>
+            </li>
+            <li>
+                <span class="howto__num" aria-hidden="true">2</span>
+                <div>
+                    <h3 class="text-h4">Find your fit</h3>
+                    <p class="mt-1">
+                        Look through the <a href="/research/" class="text-primary underline">research areas</a> and
+                        <a href="/projects/" class="text-primary underline">projects</a> to see where your interests match.
+                    </p>
+                </div>
+            </li>
+            <li>
+                <span class="howto__num" aria-hidden="true">3</span>
+                <div>
+                    <h3 class="text-h4">Email the Centre</h3>
+                    <p class="mt-1">
+                        Write to <a href={`mailto:${site.email}`} class="text-primary underline">{site.email}</a> describing
+                        your area of interest.
+                    </p>
+                </div>
+            </li>
+        </ol>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+            <Button href={mailto("Enquiry: Joining MARC")} iconLeading="material-symbols:mail-outline">Email MARC</Button>
+            {
+                follow.map((s) => (
+                    <Button href={s.href} external variant="outline" iconLeading={s.icon}>
+                        Follow on {s.label}
+                    </Button>
+                ))
+            }
+        </div>
+    </section>
+</BaseLayout>
+
+<script>
+    import "../scripts/deadlines";
+</script>
+
+<style>
+    .empty {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        padding: clamp(1.25rem, 3vw, 2rem);
+    }
+    .empty[hidden],
+    [data-vacancy-list][hidden] {
+        display: none;
+    }
+    .empty__icon,
+    .route__icon {
+        display: grid;
+        place-items: center;
+        flex: none;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--tint);
+        color: var(--tint-content);
+    }
+    .empty__icon :global(svg),
+    .route__icon :global(svg) {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+    .routes {
+        display: grid;
+        gap: 1rem;
+    }
+    @media (min-width: 560px) {
+        .routes {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    @media (min-width: 1024px) {
+        .routes {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+    }
+    .route {
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem;
+    }
+    .howto {
+        padding: clamp(1.5rem, 5vw, 3.5rem);
+    }
+    .howto__list {
+        display: grid;
+        gap: 1.5rem;
+    }
+    @media (min-width: 900px) {
+        .howto__list {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+    .howto__list li {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    .howto__num {
+        display: grid;
+        place-items: center;
+        flex: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--color-primary);
+        color: var(--color-primary-content);
+        font-family: var(--font-head);
+        font-weight: 600;
+    }
+</style>

@@ -1,0 +1,83 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Publications
+description: Add papers to the MARC Publications sheet so they appear on the Publications page, project pages and profiles.
+---
+
+import Callout from "../../components/ui/Callout.astro";
+
+Publications are not edited on GitHub. They come from the **MARC Publications** Google Sheet, which the
+website reads every time it rebuilds. Ask a maintainer for edit access.
+
+<Callout title="Linking keys: what connects a paper to the rest of the site">
+
+- **The tab name** links a paper to a **project**. It must be the project's file name (or its title) in
+  [marc_projects](/docs/projects/). The `NILM` tab, for example, belongs to `NILM.md`.
+- **The Authors column** links a paper to **people**. A paper appears on a profile when this column
+  contains the full `name` from that person's [profile](/docs/profiles/), for example `Athulya Ratnayake`.
+- **The DOI** (or, without one, the title) identifies the paper. When the same paper is listed in two
+  tabs, the website shows it once and links it to both projects, but only if the DOI, or the title,
+  is identical in both rows.
+
+Renaming a tab, abbreviating an author's name or retyping a DOI differently breaks the matching link.
+
+</Callout>
+
+## How the sheet is organised
+
+- **One tab per project**, named after the project file (see above). Papers that do not belong to a
+  project go in a tab named `Other`.
+- **One row per paper.** A paper from several projects can be listed in each of their tabs; copy the
+  row rather than retyping it, so the DOI and title stay identical.
+
+## Columns
+
+| Column | Linking key? | What to enter |
+| --- | --- | --- |
+| `Paper Title` | Yes, when there is no DOI | The full title. Rows without a title are skipped. |
+| `DOI` | Yes | The DOI (for example `10.1109/ACCESS.2024.1234567`) or, if there is none, a link to the paper. |
+| `Authors` | Yes | All authors, as in the paper. Write MARC members' names in full, as in their profiles (`Athulya Ratnayake`, not `A. Ratnayake`), so the paper appears on their profile. |
+| `Journal/Conference` | No | `Journal` or `Conference`. |
+| `Journal/Conference Name` | No | The venue, including the year where it has one, for example `2024 Moratuwa Engineering Research Conference (MERCon)`. |
+| `Review Status` | No | `Published`, `Accepted` or `Under review`. |
+
+Keep the column headings as they are: the website finds the columns by these names.
+
+## Linking papers to a project
+
+A tab is matched to a project automatically when its name is the same as the project's file name or
+title in [marc_projects](/docs/projects/), ignoring upper and lower case, spaces and punctuation. For
+example, the `NILM` tab matches `NILM.md`, and a `Demographic Analysis` tab matches
+`Demographic_Analysis.md`.
+
+If the names have to differ (one tab covering two projects, for example), a website maintainer adds the
+tab to `projectPublicationTabs` in `src/data/site.ts` in the website repository.
+
+**Changing safely:** if a project file is renamed, rename its tab to match (or ask a maintainer to map
+it). If you rename a tab, check that it still matches its project's file name or title.
+
+## Linking papers to people
+
+A paper appears on a person's profile when its `Authors` column contains the full name from their
+profile. Titles such as Prof. or Dr. are ignored. Authors written with initials only (`Ratnayake, A.`)
+are not matched, so write MARC members' names in full.
+
+If someone changes the `name` in their profile, papers that list them under the old name no longer
+appear on their profile until those Authors entries are updated.
+
+## How the year is worked out
+
+The Publications page groups papers by year. The year is taken from, in order:
+
+1. a year in the `Journal/Conference Name` column;
+2. the DOI record;
+3. a year in the link.
+
+Papers marked `Under review` are listed in their own group, and papers whose year cannot be found are
+listed last.
+
+## When changes appear
+
+The sheet is read when the website rebuilds. That happens whenever a change is merged into the website
+or one of the content repositories. To publish sheet changes straight away, a maintainer can run the
+**Deploy to GitHub Pages** workflow from the website repository's **Actions** tab (**Run workflow**).

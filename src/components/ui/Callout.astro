@@ -1,0 +1,60 @@
+---
+// Highlighted box for the documentation guides (src/pages/docs/*.mdx): an icon, a title and
+// Markdown content. "key" marks the values that link content together.
+import Icon from "./Icon.astro";
+
+interface Props {
+    title: string;
+    tone?: "key" | "info";
+}
+const { title, tone = "key" } = Astro.props;
+const icon = tone === "key" ? "material-symbols:key-outline" : "material-symbols:info-outline";
+---
+
+<aside class:list={["callout", `callout--${tone}`]}>
+    <p class="callout__title">
+        <Icon name={icon} />
+        {title}
+    </p>
+    <div class="callout__body">
+        <slot />
+    </div>
+</aside>
+
+<style>
+    .callout {
+        margin: 1.75em 0;
+        padding: 1rem 1.25rem;
+        border-radius: 12px;
+        border: 1px solid var(--color-line);
+        border-left: 4px solid var(--color-primary);
+        background: var(--color-soft);
+    }
+    .callout--key {
+        border-left-color: var(--color-accent);
+    }
+    .callout__title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0 !important;
+        font-family: var(--font-head);
+        font-weight: 600;
+        color: var(--color-heading);
+    }
+    .callout__title :global(svg) {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex: none;
+        color: var(--color-primary);
+    }
+    .callout--key .callout__title :global(svg) {
+        color: var(--color-accent);
+    }
+    .callout__body :global(> :first-child) {
+        margin-top: 0.5rem;
+    }
+    .callout__body :global(> :last-child) {
+        margin-bottom: 0;
+    }
+</style>

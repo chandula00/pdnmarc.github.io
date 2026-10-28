@@ -3,7 +3,6 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PersonCard from "../../components/PersonCard.astro";
 import Tag from "../../components/ui/Tag.astro";
-import SourceNote from "../../components/ui/SourceNote.astro";
 
 const people = await getCollection("people");
 
@@ -83,9 +82,4 @@ const groups = [
             ))
         }
     </div>
-
-    <SourceNote class="mt-16">
-        Names, roles and photographs come from the MARC people repository. A placeholder is shown where no
-        photograph has been published.
-    </SourceNote>
 </BaseLayout>
