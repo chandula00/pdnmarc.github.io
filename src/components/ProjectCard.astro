@@ -6,6 +6,7 @@ import type { CollectionEntry } from "astro:content";
 import Icon from "./ui/Icon.astro";
 import Tag from "./ui/Tag.astro";
 import { areaMeta } from "../lib/research";
+import { projectTeam } from "../lib/people";
 
 interface Props {
     project: CollectionEntry<"projects">;
@@ -15,7 +16,9 @@ interface Props {
 }
 const { project, papers = 0, headingLevel: H = "h3" } = Astro.props;
 const area = areaMeta(project.data.researchArea);
-const team = project.data.projectMembers.length + project.data.supervisors.length;
+// Same people as the project page's team card (src/lib/people.ts).
+const { supervisors, members } = await projectTeam(project);
+const team = supervisors.length + members.length;
 ---
 
 <a href={`/projects/${project.id}/`} class:list={["project-card group card-surface surface-hover", `acc-${area.accent}`]}>

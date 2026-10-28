@@ -13,23 +13,61 @@ const where = [
     { what: "Home photos, research areas, highlights, contact details", place: "Website repository", href: contentRepos.website, guide: "/docs/site/" },
 ];
 
+// Changes that span repositories, as checklists.
+const tasks = [
+    {
+        title: "A new member joins MARC and a project",
+        steps: [
+            { where: "marc_people", href: "/docs/profiles/#add-a-new-profile", text: "add their profile, with their email and name, plus any other addresses (otherEmails) and the forms of their name used in their papers (otherNames)." },
+            { where: "marc_projects", href: "/docs/profiles/#add-yourself-to-your-projects", text: "add the same email to each project they work on." },
+            { where: "Their papers", href: "/docs/publications/#linking-papers-to-people", text: "check each paper appears on their profile; if not, add the author-list form of their name to otherNames." },
+        ],
+    },
+    {
+        title: "Someone joins or leaves a project",
+        steps: [
+            { where: "marc_projects", href: "/docs/projects/#adding-or-removing-a-team-member", text: "add or remove their email in the project's projectMembers or supervisors. Their profile does not change." },
+        ],
+    },
+    {
+        title: "Someone's email address changes",
+        steps: [
+            { where: "marc_people", href: "/docs/profiles/#changing-your-email-or-name", text: "put the new address in email and move the old one to otherEmails. Project files stay as they are." },
+        ],
+    },
+    {
+        title: "A new paper is published",
+        steps: [
+            { where: "Publications sheet", href: "/docs/publications/#columns", text: "add a row in the project's tab, with the DOI and authors' full names. Copy the row to other projects' tabs if it belongs to several." },
+        ],
+    },
+    {
+        title: "A project is renamed",
+        steps: [
+            { where: "marc_projects", href: "/docs/projects/#changing-a-linking-key-safely", text: "rename the file (the page address changes)." },
+            { where: "Publications sheet", href: "/docs/publications/#linking-papers-to-a-project", text: "rename the project's tab to match." },
+            { where: "Website", href: "/docs/site/", text: "ask a maintainer to update highlights and projectPublicationTabs." },
+        ],
+    },
+];
+
 // Values written in two places that must stay identical (see each guide's "Linking keys" box).
 const keys = [
     {
-        key: "email",
+        key: "email + otherEmails",
         in: "Profile",
         match: "projectMembers / supervisors in project files",
         connects: "A person ↔ their projects",
-        change: "The person drops off the project page. Change the profile and every project that lists it together.",
-        guide: "/docs/profiles/#changing-a-linking-key-safely",
+        change: "Move the old address to otherEmails and every project keeps linking.",
+        guide: "/docs/profiles/#changing-your-email-or-name",
     },
     {
-        key: "name",
+        key: "name + otherNames",
         in: "Profile",
         match: "Authors column of the publications sheet",
         connects: "A person ↔ their publications",
-        change: "Papers listing the old name drop off the profile.",
-        guide: "/docs/profiles/#changing-a-linking-key-safely",
+        change: "Move the old form to otherNames and every paper stays on the profile.",
+        guide: "/docs/profiles/#changing-your-email-or-name",
     },
     {
         key: "File name",
@@ -95,6 +133,29 @@ const keys = [
             ))
         }
     </ul>
+
+    <section class="mt-16" aria-labelledby="tasks">
+        <h2 id="tasks" class="text-h3">Common tasks</h2>
+        <p class="mt-2 max-w-3xl">
+            Some changes touch more than one place. Do every step, or a link between the pages will be missing.
+        </p>
+        <ul class="tasks mt-6">
+            {
+                tasks.map((t) => (
+                    <li class="task card-surface">
+                        <h3 class="text-h4">{t.title}</h3>
+                        <ol class="task__steps">
+                            {t.steps.map((s) => (
+                                <li>
+                                    <a href={s.href} class="text-primary underline underline-offset-2">{s.where}</a>: {s.text}
+                                </li>
+                            ))}
+                        </ol>
+                    </li>
+                ))
+            }
+        </ul>
+    </section>
 
     <section class="mt-16" aria-labelledby="keys">
         <h2 id="keys" class="text-h3">How content is linked</h2>
@@ -245,6 +306,26 @@ const keys = [
     .guide__icon :global(svg) {
         width: 1.5rem;
         height: 1.5rem;
+    }
+    .tasks {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    }
+    .task {
+        padding: 1.25rem 1.5rem;
+    }
+    .task__steps {
+        margin-top: 0.75rem;
+        padding-left: 1.25rem;
+        list-style: decimal;
+        display: grid;
+        gap: 0.5rem;
+        font-size: 0.9375rem;
+    }
+    .task__steps li::marker {
+        color: var(--color-muted);
+        font-weight: 600;
     }
     .table-wrap {
         /* relative: keeps the absolutely positioned sr-only text inside the scroll box on phones */

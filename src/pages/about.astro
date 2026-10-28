@@ -34,7 +34,8 @@ const norm = (n: string) =>
         .toLowerCase()
         .replace(/\b(prof|dr|ir)\.?\s/g, "")
         .replace(/[^a-z]/g, "");
-const profileFor = (name: string) => people.find((p) => norm(p.data.name) === norm(name));
+const profileFor = (name: string) =>
+    people.find((p) => [p.data.name, ...p.data.otherNames].some((n) => norm(n) === norm(name)));
 const initials = (name: string) =>
     name
         .replace(/\b(Prof|Dr|Ir)\.?\s/g, "")

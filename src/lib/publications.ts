@@ -4,6 +4,7 @@
 // Duplicates are merged by DOI, or by title when there is no DOI.
 import { getCollection, type CollectionEntry } from "astro:content";
 import { projectPublicationTabs, publicationTabLabels } from "../data/site";
+import { authorsInclude, normEmail, personEmails, personNames } from "./people";
 
 export type PubStatus = "Published" | "Accepted" | "Under review" | "";
 
@@ -129,13 +130,14 @@ export function projectChips(pub: Publication, links: Map<string, ProjectLink>) 
 }
 
 /**
- * Papers by a person: matched by email from the original sheet, or by their full name
- * appearing in the author list (names in "Initials Surname" form are not matched).
+ * Papers by a person: matched by any of their emails (original sheet), or by their name or one of
+ * their `otherNames` appearing as a whole name in the author list (src/lib/people.ts).
  */
 export async function publicationsForPerson(person: CollectionEntry<"people">): Promise<Publication[]> {
-    const name = person.data.name.replace(/^(Prof|Dr|Mr|Ms|Mrs|Eng)\.?\s+/i, "").trim().toLowerCase();
+    const emails = new Set(personEmails(person));
+    const names = personNames(person);
     return (await getAllPublications()).filter(
-        (p) => p.peopleEmails.includes(person.data.email) || (name.includes(" ") && p.authors.toLowerCase().includes(name)),
+        (p) => p.peopleEmails.some((e) => emails.has(normEmail(e))) || authorsInclude(p.authors, names),
     );
 }
 
