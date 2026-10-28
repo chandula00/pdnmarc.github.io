@@ -4,7 +4,6 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PublicationItem from "../../components/PublicationItem.astro";
 import Icon from "../../components/ui/Icon.astro";
-import SourceNote from "../../components/ui/SourceNote.astro";
 import { getAllPublications, groupByYear, projectLinkMap, projectChips } from "../../lib/publications";
 
 const pubs = await getAllPublications();
@@ -104,11 +103,6 @@ const anchor = (label: string) => `y-${label.toLowerCase().replace(/[^a-z0-9]+/g
             ))
         }
     </div>
-
-    <SourceNote class="mt-14">
-        Publications are listed from MARC's publications sheet, one tab per project. Years come from the venue name or
-        the DOI record; papers still under review are listed separately.
-    </SourceNote>
 </BaseLayout>
 
 <script>

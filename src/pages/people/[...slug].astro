@@ -69,7 +69,6 @@ const hasBio = Boolean(person.body?.trim());
                         )
                     }
                 </div>
-                {!person.data.photo && <p class="mt-2 text-sm text-muted">Photograph not available</p>}
                 <h1 class="text-h3 mt-5">{person.data.name}</h1>
                 <div class="mt-3">
                     <Tag variant={person.data.post === "Director" ? "red" : "default"}>{person.data.post}</Tag>
@@ -78,18 +77,16 @@ const hasBio = Boolean(person.body?.trim());
         </aside>
 
         <div class="space-y-14 lg:col-span-8">
-            <section aria-labelledby="bio">
-                <h2 id="bio" class="text-h3 mb-5">Biography</h2>
-                {
-                    hasBio ? (
+            {
+                hasBio && (
+                    <section aria-labelledby="bio">
+                        <h2 id="bio" class="text-h3 mb-5">Biography</h2>
                         <Prose>
                             <Content />
                         </Prose>
-                    ) : (
-                        <p class="text-muted">A biography has not been published yet.</p>
-                    )
-                }
-            </section>
+                    </section>
+                )
+            }
 
             {
                 personProjects.length > 0 && (

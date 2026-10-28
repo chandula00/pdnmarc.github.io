@@ -45,8 +45,8 @@ export default defineConfig({
     preact(),
     icon(),
     sitemap({
-      // Keep redirect stubs (capitalised legacy paths) out of the sitemap.
-      filter: (page) => !/\/Research\//.test(page) && !page.endsWith('/404/'),
+      // Keep redirect stubs (capitalised legacy paths) and the internal /docs guides out of the sitemap.
+      filter: (page) => !/\/Research\//.test(page) && !page.endsWith('/404/') && !/\/docs\//.test(page),
     }),
   ],
   markdown: {

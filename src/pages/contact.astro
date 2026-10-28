@@ -61,19 +61,17 @@ const enquiries = [
                             </a>
                         </div>
                     </li>
-                    <li class="row">
-                        <span class="row__icon"><Icon name="material-symbols:call-outline" /></span>
-                        <div>
-                            <h3 class="row__title">Telephone</h3>
-                            {
-                                site.telephone ? (
+                    {
+                        site.telephone && (
+                            <li class="row">
+                                <span class="row__icon"><Icon name="material-symbols:call-outline" /></span>
+                                <div>
+                                    <h3 class="row__title">Telephone</h3>
                                     <a href={`tel:${site.telephone.replace(/\s+/g, "")}`}>{site.telephone}</a>
-                                ) : (
-                                    <p class="text-muted">Not published — please email the Centre.</p>
-                                )
-                            }
-                        </div>
-                    </li>
+                                </div>
+                            </li>
+                        )
+                    }
                 </ul>
                 <div class="flex items-center justify-between gap-4 border-t border-line-soft px-4 py-3">
                     <span class="text-sm text-muted">Follow MARC</span>

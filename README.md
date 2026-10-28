@@ -48,19 +48,21 @@ flowchart TD
 ## :card_file_box: External content repositories
 
 ### [`marc_people`](https://github.com/pdnMARC/marc_people)
-Stores the people profiles used by the website.
+Stores the people profiles used by the website, in `profiles/` (photos in `profiles/photos/`). Each person maintains their own profile; the documentation pages at `/docs/` (linked from the footer's bottom row) explain how, including the linking keys that connect profiles, projects and publications.
 
 These entries are cloned into the website build as the people collection.
 
 ### [`marc_projects`](https://github.com/pdnMARC/marc_projects)
-Stores the project Markdown files and cover images.
+Stores the project Markdown files and images, in `projects/`.
 
 These entries are cloned into the website build as the projects collection.
 
 ### [`marc_news`](https://github.com/pdnMARC/marc_news)
-Stores the Markdown news articles and cover images.
+Stores the Markdown news articles and photos, in `articles/`. Articles with `vacancy: true` also appear on `/vacancies` until their `deadline`.
 
 These entries are cloned into the website build as the news collection.
+
+`src/content.config.ts` reads each repository's subfolder, and falls back to the repository root for checkouts from before the move.
 
 ## :bar_chart: Google Sheet data source
 

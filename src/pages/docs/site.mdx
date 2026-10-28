@@ -1,0 +1,95 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Site pages
+description: For website maintainers. Change the home page photos, research areas, highlights, contact details and other site-wide content.
+---
+
+import Callout from "../../components/ui/Callout.astro";
+
+Everything that is not a profile, project, news article or publication lives in the
+[website repository](https://github.com/pdnMARC/pdnmarc.github.io). A push to its `main` branch
+**deploys the live site**, so make changes on a branch and merge them through a pull request.
+
+<Callout title="Linking keys in the website repository">
+
+A few values here point at content in the other repositories and must match it exactly:
+
+- **Research area `title`** (in `src/data/research/*.md`) must equal the `researchArea` used by
+  projects. Renaming an area means updating every project in that area, and the list of allowed areas
+  in the marc_projects validator (`scripts/validate-projects.mjs`).
+- **`highlights[].project`** (in `src/data/site.ts`) is a project's file name in lower case, for example
+  `inr` for `INR.md`. If that project file is renamed, the highlight falls back to its research area
+  until this is updated.
+- **`projectPublicationTabs`** (in `src/data/site.ts`) maps a project's file name in lower case to the
+  publications sheet tab(s) that belong to it, for example `lung_sound_analysis: ["Lung Project"]`.
+  Update it when a project file or a tab is renamed.
+
+</Callout>
+
+## Where things are
+
+| What | Where |
+| --- | --- |
+| Home page photo collage | Photos in `src/assets/home/`; their descriptions in `homePhotos` in `src/data/site.ts`. See `src/assets/home/README.md`. |
+| Home page research highlights | `highlights` in `src/data/site.ts` |
+| Research areas (text and cover images) | One Markdown file per area in `src/data/research/` |
+| About page text, mission and vision | `statements` and `ecosystem` in `src/data/site.ts` |
+| Leadership and advisors on the About page | `leadership` in `src/data/site.ts` |
+| Contact details, address, email, telephone | `site` in `src/data/site.ts` |
+| Social media links | `socials` in `src/data/site.ts` |
+| Main menu and footer links | `nav` and `footerColumns` in `src/data/site.ts` |
+| Publications sheet tabs with a different name from their project | `projectPublicationTabs` in `src/data/site.ts` |
+| These documentation pages | `src/pages/docs/` (one Markdown file per guide) |
+
+## Home page photos
+
+Put 1 to 5 landscape photos (at least 1600 pixels wide) in `src/assets/home/`, named `01-….jpg`,
+`02-….jpg` and so on; the first is the large one. Add a description of each to `homePhotos.alt` in
+`src/data/site.ts`. Only use photos MARC has the right to publish, with consent from anyone recognisable
+in them.
+
+## Research areas
+
+Each file in `src/data/research/` is one research area:
+
+```md
+---
+title: Smart Grid
+coverImage: Smart_Grid_Cover.png
+short: >
+    One paragraph shown on the research area cards.
+---
+
+The full description shown on the research area page.
+```
+
+The `title` must match the `researchArea` value that projects use, or the projects will not be listed
+under the area.
+
+## Preview the site on your computer
+
+With [Node.js](https://nodejs.org/) installed and the content repositories checked out next to the
+website (`marc_people`, `marc_projects` and `marc_news` in the same parent folder):
+
+```bash
+npm install
+npm run dev:local
+npm run build:local
+```
+
+`npm run dev:local` starts a preview at http://localhost:4321 using your local content checkouts, and
+`npm run build:local` makes a full production build in `dist/`. `npm run dev` (without `:local`) uses
+the copies in `src/collection_*` instead. To refresh the
+publications and social feed data from the Google Sheets, run `uv run python_scripts/get_data.py`.
+
+## Deployment
+
+The live site is built and deployed by the **Deploy to GitHub Pages** workflow. It runs when:
+
+- a change is pushed to the website's `main` branch;
+- a change is merged into `main` in one of the content repositories;
+- a maintainer runs it by hand from the **Actions** tab (**Run workflow**), for example after editing the
+  Google Sheets.
+
+Pull requests to the website are built (but not deployed) by the **PR Build Check** workflow, so problems show
+up before merging.

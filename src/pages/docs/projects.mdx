@@ -1,0 +1,143 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Projects
+description: Add a research project, its team, cover image and description, or update one, without breaking its links to people, publications and research areas.
+---
+
+import Callout from "../../components/ui/Callout.astro";
+
+Projects live in the [marc_projects repository](https://github.com/pdnMARC/marc_projects) on GitHub: one
+Markdown file per project in the `projects/` folder.
+
+```text
+marc_projects/
+└── projects/
+    ├── Example_Project.md
+    ├── cover_images/      ← one cover image per project
+    └── images/            ← figures used inside project pages
+```
+
+<Callout title="Linking keys: keep these exactly the same">
+
+A project file connects to three other kinds of content:
+
+- **`projectMembers` and `supervisors`** link the project to **people**. Each entry is an email
+  address that must be exactly the `email` in that person's profile.
+- **The file name** (and the `project` title) link the project to its **publications**. The tab for
+  this project in the publications sheet is matched to the file name or the title. The file name is
+  also the page address, `/projects/<file-name>/`, and how the home page highlights refer to the
+  project.
+- **`researchArea`** links the project to its **research area** page. It must be one of the six area
+  names, spelled exactly.
+
+See [Changing a linking key safely](#changing-a-linking-key-safely) before renaming anything.
+
+</Callout>
+
+## Add or update a project
+
+1. Open the [`projects/`](https://github.com/pdnMARC/marc_projects/tree/main/projects) folder.
+2. To update a project, open its file and click the pencil icon. To add one, click
+   **Add file → Create new file** and name it, for example, `Example_Project.md`. Choose the name
+   carefully: it is the page address, and the publications sheet tab should use the same name.
+3. Upload the cover image to `projects/cover_images/` (**Add file → Upload files**).
+4. Commit to a new branch and open a pull request. When it is merged, the website rebuilds.
+
+## Template
+
+```md
+---
+project: "Example Project: A Short, Descriptive Title"
+projectMembers:
+  - researcher1@eng.pdn.ac.lk
+  - researcher2@eng.pdn.ac.lk
+supervisors:
+  - supervisor@eng.pdn.ac.lk
+researchArea: Computer Vision
+researchPillars:
+  - "AI in Engineering"
+coverImage: ./cover_images/Example_Project.jpg
+---
+
+One or two paragraphs that explain the problem and why it matters.
+
+## Approach
+
+What the team is doing, and any results so far.
+
+![Segmentation results on the test set](./images/Example_Project_results.jpg)
+```
+
+## Fields
+
+**Linking keys**: they point at other content. Copy values exactly; don't retype them from memory.
+
+| Field | Required | Must match | Purpose |
+| --- | --- | --- | --- |
+| `projectMembers` | Yes | The `email` in each researcher's [profile](/docs/profiles/) | The researchers on the project, as a list of email addresses. Use `[]` for none. |
+| `supervisors` | Yes | The `email` in each supervisor's [profile](/docs/profiles/) | The supervisors, as a list of email addresses. Use `[]` for none. |
+| `researchArea` | Yes | One of `Biomedical Engineering and Wearables`, `Computer Vision`, `Generative AI`, `Multispectral Imaging`, `Smart Grid`, `Socioeconomic` | Places the project on that research area's page and gives it the area's colour. |
+| File name | Yes | The project's tab in the [publications sheet](/docs/publications/) | The page address (`Example_Project.md` → `/projects/example_project/`) and the main way publications are linked. |
+| `project` | Yes | The publications tab, if the tab uses the title rather than the file name | The project title on cards and the project page. |
+
+**Safe to change** at any time:
+
+| Field | Required | Purpose |
+| --- | --- | --- |
+| `researchPillars` | Yes | Short tags shown on the project, as a list. Use `[]` for none. |
+| `coverImage` | Yes | Path to the cover image, starting with `./cover_images/`. |
+| Description | No | Everything below the closing `---`, in Markdown. |
+
+## The project team
+
+Team members are listed by **email address**, and each address is matched to a profile in
+[marc_people](/docs/profiles/). On the project page:
+
+- people with a profile appear with their photo, name and role, linking to their profile;
+- an email with no matching profile is left out until that person adds their profile.
+
+So:
+
+- copy each address from the person's profile file rather than typing it, and write it in lower case;
+- ask new team members to [add their profile](/docs/profiles/#add-a-new-profile) using the same address
+  you listed here.
+
+Email addresses are never shown on the website.
+
+## Changing a linking key safely
+
+**Renaming the project file.** The page address changes, and three things that use the old name must be
+updated in the same go:
+
+1. Rename the project's tab in the publications sheet to the new file name (or ask a maintainer to map
+   it, see [Publications](/docs/publications/#linking-papers-to-a-project)).
+2. Ask a website maintainer to update the project's entry in `highlights` and `projectPublicationTabs`
+   in `src/data/site.ts`, if it has one.
+3. Links to the old address shared elsewhere stop working, so rename only when you really need to.
+
+**Changing the `project` title.** Safe as long as the publications tab still matches the file name. If
+the tab was named after the old title, rename the tab too.
+
+**Changing a team member's email.** Change it in their profile and in every project that lists it, and
+merge both together. See [Profiles](/docs/profiles/#changing-a-linking-key-safely).
+
+**Moving the project to another research area.** Change `researchArea` to another of the six names,
+spelled exactly as listed above.
+
+## Description and images
+
+Everything below the closing `---` is the project description, in Markdown. Put figures in
+`projects/images/` and reference them as `./images/file-name.jpg`, with a short description in the
+square brackets for screen-reader users. Mathematics can be written with `$…$` (inline) and `$$…$$`
+(display).
+
+For the cover image, use a landscape `.jpg` or `.png` at least 1200 pixels wide. It is cropped to fit
+the cards, so keep the subject near the centre. Image paths must match the file names exactly,
+including upper and lower case.
+
+## Publications
+
+A project's publications come from its tab in the MARC Publications sheet, not from this repository.
+See [Publications](/docs/publications/).
+
+More detail: the [marc_projects README](https://github.com/pdnMARC/marc_projects#readme).

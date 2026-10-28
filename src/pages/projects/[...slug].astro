@@ -21,18 +21,20 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { Content } = await render(project);
 
-// Team entries are matched to profiles by email. Anything that doesn't resolve
-// (e.g. a plain name) renders as text, never as a dead "#" link (fixes B7).
+// Team entries are matched to people profiles by email. Anything that doesn't resolve
+// renders as plain text, never as a dead "#" link (fixes B7).
 const people = await getCollection("people");
 const byEmail = new Map(people.map((p) => [p.data.email, p]));
 const resolve = (ref: string) => {
     const person = byEmail.get(ref);
-    if (!person) console.warn(`[projects/${project.id}] team reference "${ref}" does not match a people profile`);
-    // Never print an unmatched email address (decision D12); plain names are shown as given.
-    return { ref, person, label: person?.data.name ?? (ref.includes("@") ? "Profile not yet published" : ref) };
+    if (!person && ref.includes("@")) console.warn(`[projects/${project.id}] team email "${ref}" does not match a people profile`);
+    return { ref, person, label: person?.data.name ?? ref };
 };
-const supervisors = project.data.supervisors.map(resolve);
-const members = project.data.projectMembers.map(resolve);
+// An email without a profile is left out until that person adds one (never print the address,
+// decision D12); plain names are shown as given.
+const listed = (entry: ReturnType<typeof resolve>) => entry.person || !entry.ref.includes("@");
+const supervisors = project.data.supervisors.map(resolve).filter(listed);
+const members = project.data.projectMembers.map(resolve).filter(listed);
 
 // Papers listed under this project in the publications sheet (see src/lib/publications.ts).
 const projectPublications = await publicationsForProject(project);

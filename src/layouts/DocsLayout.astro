@@ -1,0 +1,116 @@
+---
+// Layout for the documentation guides in src/pages/docs/*.mdx: how MARC members update the
+// site's content. Internal pages: noindex, left out of the sitemap, linked only from the footer.
+import BaseLayout from "./BaseLayout.astro";
+import Prose from "../components/ui/Prose.astro";
+import Icon from "../components/ui/Icon.astro";
+import { docs } from "../data/site";
+
+interface Props {
+    frontmatter: { title: string; description: string };
+}
+const { frontmatter } = Astro.props;
+const current = Astro.url.pathname.replace(/\/?$/, "/");
+---
+
+<BaseLayout
+    title={`${frontmatter.title} — Documentation`}
+    description={frontmatter.description}
+    noindex
+    breadcrumbs={[{ label: "Documentation", href: "/docs/" }, { label: frontmatter.title }]}
+    header={{ eyebrow: "Documentation", title: frontmatter.title, subtitle: frontmatter.description }}
+>
+    <div class="docs">
+        <nav class="docs__nav" aria-label="Documentation">
+            <ul>
+                <li>
+                    <a href="/docs/" class="docs__link">
+                        <Icon name="material-symbols:home-outline" /> Overview
+                    </a>
+                </li>
+                {
+                    docs.map((d) => (
+                        <li>
+                            <a href={d.href} class="docs__link" aria-current={current === d.href ? "page" : undefined}>
+                                <Icon name={d.icon} /> {d.label}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </nav>
+        <article class="docs__body">
+            <Prose size="base">
+                <slot />
+            </Prose>
+        </article>
+    </div>
+</BaseLayout>
+
+<style>
+    .docs {
+        display: grid;
+        gap: 2rem;
+    }
+    @media (min-width: 1024px) {
+        .docs {
+            grid-template-columns: 240px minmax(0, 1fr);
+            gap: 3.5rem;
+        }
+        .docs__nav ul {
+            position: sticky;
+            top: calc(var(--header-h) + 24px);
+        }
+    }
+    .docs__nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    @media (min-width: 1024px) {
+        .docs__nav ul {
+            flex-direction: column;
+            gap: 0.125rem;
+        }
+    }
+    .docs__link {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        min-height: 40px;
+        padding: 0 1rem 0 0.75rem;
+        border-radius: 999px;
+        color: var(--color-body);
+        font-weight: 500;
+        font-size: 0.9375rem;
+        border: 1px solid var(--color-line);
+        transition: background-color var(--t-fast);
+    }
+    @media (min-width: 1024px) {
+        .docs__link {
+            border-color: transparent;
+        }
+    }
+    .docs__link:hover {
+        background: var(--color-soft);
+    }
+    .docs__link[aria-current="page"] {
+        background: var(--tint);
+        color: var(--tint-content);
+        border-color: transparent;
+    }
+    .docs__link :global(svg) {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex: none;
+    }
+    .docs__body {
+        min-width: 0;
+        max-width: 820px;
+    }
+    /* Field tables scroll on their own on narrow screens instead of widening the page. */
+    .docs__body :global(table) {
+        display: block;
+        overflow-x: auto;
+    }
+</style>

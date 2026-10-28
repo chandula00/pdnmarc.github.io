@@ -15,7 +15,6 @@ export const site = {
     telephone: null as string | null,
     mapsUrl:
         "https://www.google.com/maps/search/?api=1&query=Faculty+of+Engineering%2C+University+of+Peradeniya%2C+Sri+Lanka",
-    ai4covidUrl: "https://covid.eng.pdn.ac.lk/index.php",
     description:
         "MARC of the University of Peradeniya is a research platform dedicated to bridging the gap between Sri Lanka's today's reality and tomorrow's potential — unlocking the potential of AI to address the country's economic and societal challenges.",
     footerBlurb:
@@ -121,6 +120,24 @@ export const highlights: {
     },
 ];
 
+// Where the content is edited, for the documentation pages (/docs). MARC members keep their own
+// profiles, projects and news up to date there. Internal, so /docs is linked only from the footer's
+// bottom row and kept out of search engines and the sitemap.
+export const contentRepos = {
+    people: "https://github.com/pdnMARC/marc_people",
+    projects: "https://github.com/pdnMARC/marc_projects",
+    news: "https://github.com/pdnMARC/marc_news",
+    website: "https://github.com/pdnMARC/pdnmarc.github.io",
+};
+
+export const docs = [
+    { href: "/docs/profiles/", label: "People profiles", icon: "material-symbols:person-outline", text: "Add yourself or update your photo, role and biography." },
+    { href: "/docs/projects/", label: "Projects", icon: "material-symbols:science-outline", text: "Add a project, its team, cover image and description." },
+    { href: "/docs/news/", label: "News & vacancies", icon: "material-symbols:newspaper", text: "Post a news article, a vacancy with a deadline, or a social feed item." },
+    { href: "/docs/publications/", label: "Publications", icon: "material-symbols:menu-book-outline", text: "Add papers to the publications sheet and link them to projects and people." },
+    { href: "/docs/site/", label: "Site pages", icon: "material-symbols:web", text: "For website maintainers: home photos, research areas, highlights and contact details." },
+];
+
 export type SocialKey = "facebook" | "linkedin" | "instagram" | "youtube";
 
 export const socials: { key: SocialKey; label: string; href: string; icon: string }[] = [
@@ -159,6 +176,7 @@ export const nav = [
     { href: "/publications", label: "Publications" },
     { href: "/people", label: "People" },
     { href: "/news", label: "News" },
+    { href: "/vacancies", label: "Vacancies" },
     { href: "/contact", label: "Contact" },
 ];
 
@@ -170,6 +188,7 @@ export const footerColumns = {
         { href: "/publications", label: "Publications" },
         { href: "/news", label: "News" },
         { href: "/people", label: "People" },
+        { href: "/vacancies", label: "Vacancies" },
         { href: "/contact", label: "Contact" },
     ],
     research: [
@@ -177,7 +196,6 @@ export const footerColumns = {
         { href: "/projects", label: "Research Projects" },
         { href: "/publications", label: "Publications" },
         { href: "/about#ecosystem", label: "Research Ecosystem" },
-        { href: site.ai4covidUrl, label: "AI4Covid", external: true },
     ],
 };
 

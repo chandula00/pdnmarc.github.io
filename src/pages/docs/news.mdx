@@ -1,0 +1,129 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: News & vacancies
+description: Post a news article, a vacancy with an application deadline, or a short social feed item.
+---
+
+import Callout from "../../components/ui/Callout.astro";
+
+The News page has two parts:
+
+- **News articles**: full stories with their own page, written in Markdown in the
+  [marc_news repository](https://github.com/pdnMARC/marc_news). Vacancies are news articles too.
+- **Social feed items**: short entries that link out to a Facebook, LinkedIn or web post, added as rows
+  in the website data Google Sheet.
+
+```text
+marc_news/
+└── articles/
+    ├── 2026-03-10-example-news.md
+    └── cover_photos/
+        └── 2026-03-10-example-news/
+            ├── 01.jpg
+            └── 02.jpg
+```
+
+<Callout title="Linking keys: keep these the same after publishing">
+
+News articles are not linked to profiles or projects, so they are the easiest to edit. Two things still
+act as keys:
+
+- **The file name** is the article's address: `2026-03-10-example-news.md` becomes
+  `/news/2026-03-10-example-news/`. Once an article is shared (on social media, in an email), don't rename
+  the file, or those links stop working. Fix typos in the `title` instead.
+- **Image paths** (`cover` and the images in the text) must match the photo files exactly, including
+  upper and lower case. If you rename or move a photo, update every path that points to it.
+
+Everything else (title, date, summary, text, vacancy fields) is safe to change at any time.
+
+</Callout>
+
+## Post a news article
+
+1. Open the [`articles/`](https://github.com/pdnMARC/marc_news/tree/main/articles) folder and click
+   **Add file → Create new file**.
+2. Name the file after the date and a few words of the title, for example
+   `2026-03-10-example-news.md`. This becomes the address: `/news/2026-03-10-example-news/`.
+3. Upload photos to `articles/cover_photos/`, ideally in a folder named like the article.
+4. Commit to a new branch and open a pull request. When it is merged, the website rebuilds.
+
+```md
+---
+title: "MARC Researchers Win Best Paper Award"
+date: 2026-03-10
+cover: ./cover_photos/2026-03-10-example-news/01.jpg
+short: "One or two sentences for the news card and the top of the article."
+---
+
+The full article, in Markdown.
+
+## Photos
+
+![The team receiving the award](./cover_photos/2026-03-10-example-news/02.jpg)
+```
+
+| Field | Required | What it does |
+| --- | --- | --- |
+| `title` | Yes | The headline. Must be unique across all articles. |
+| `date` | Yes | Publication date, written exactly as `YYYY-MM-DD`. Articles are sorted by it, newest first. |
+| `short` | Yes | The summary on the news card and under the headline. |
+| `cover` | No | Cover photo, starting with `./cover_photos/`. Landscape, at least 1200 pixels wide. |
+
+Describe every photo inside the square brackets (`![what the photo shows](…)`) so screen-reader users
+know what it shows.
+
+## Post a vacancy
+
+A vacancy, internship or volunteer call is a news article with up to three extra fields:
+
+```md
+---
+title: "Research Assistant: Hyperspectral Imaging"
+date: 2026-10-20
+short: "MARC is looking for a Research Assistant to join the hyperspectral imaging team."
+vacancy: true
+deadline: 2026-11-30
+apply: https://forms.gle/your-form
+---
+
+The role, who can apply, and how to apply.
+```
+
+| Field | What it does |
+| --- | --- |
+| `vacancy` | `true` lists the article on the [Vacancies](/vacancies/) page and tags it "Vacancy" in News. |
+| `deadline` | Optional. Last day to apply, as `YYYY-MM-DD`. |
+| `apply` | Optional. The application link: an `https://` address (a form, for example) or a `mailto:` address. Adds an **Apply** button. |
+
+- The vacancy stays on the Vacancies page until the end of its `deadline` day (Sri Lanka time), then
+  drops off by itself. The article stays in News and shows "Applications closed".
+- Without a `deadline`, it stays on the Vacancies page until you remove `vacancy: true`.
+- `deadline` and `apply` can only be used together with `vacancy: true`.
+
+## Social feed items
+
+Short updates that link to a post elsewhere go in the **News** tab of the website data Google Sheet
+(ask a maintainer for edit access). Each row is one item in the "Latest activity" list on the News page.
+
+| Column | Required | What to enter |
+| --- | --- | --- |
+| `Title` | Yes | A short title for the post. |
+| `Date` | Yes | `YYYY-MM-DD`. |
+| `Source` | Yes | Exactly `Facebook`, `LinkedIn`, `Web` or `Twitter`. |
+| `URL` | Yes | The full link to the post. |
+| `Thumbnail` | No | Leave blank unless asked. |
+| `Embed` | No | Leave blank unless asked. |
+
+Rows missing a Title, Date or URL are skipped. New rows appear after the next website rebuild.
+
+Double-check `Source`, `Date` and `URL`: a misspelled source, a date in another format or an incomplete
+link stops the website from rebuilding until the row is fixed.
+
+## If the check fails
+
+When you open a pull request, an automatic check validates every article. If it fails, open the
+**Checks** tab to see which file and field to fix. Common problems: a date not written as `YYYY-MM-DD`,
+a title already used by another article, a `cover` path that does not match the file, or an article
+saved outside the `articles/` folder.
+
+More detail: the [marc_news README](https://github.com/pdnMARC/marc_news#readme).

@@ -4,6 +4,8 @@ import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Prose from "../../components/ui/Prose.astro";
 import Icon from "../../components/ui/Icon.astro";
+import Button from "../../components/ui/Button.astro";
+import { closesAt, formatDeadline, isOpen } from "../../lib/vacancies";
 
 export async function getStaticPaths() {
     const news = await getCollection("news");
@@ -16,6 +18,8 @@ export async function getStaticPaths() {
 const { item } = Astro.props;
 const { Content } = await render(item);
 const isoDate = item.data.date.toISOString().slice(0, 10);
+const { vacancy, deadline, apply } = item.data;
+const applyExternal = !!apply && /^https?:/.test(apply);
 ---
 
 <BaseLayout
@@ -43,6 +47,39 @@ const isoDate = item.data.date.toISOString().slice(0, 10);
             </p>
             <h1 class="text-page-title mt-4">{item.data.title}</h1>
             <p class="text-lede mt-6 border-l-4 border-primary pl-5">{item.data.short}</p>
+            {
+                vacancy && (
+                    <div
+                        class="vacancy-notice surface-tonal"
+                        data-closes={deadline ? closesAt(deadline) : undefined}
+                        data-closed={isOpen(item) ? undefined : ""}
+                    >
+                        <p class="flex items-start gap-2 font-semibold text-heading">
+                            <Icon name="material-symbols:event-outline" class="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                            {deadline ? (
+                                <span>
+                                    <span class="when-open">Applications close on </span>
+                                    <span class="when-closed">Applications closed on </span>
+                                    <time datetime={deadline.toISOString().slice(0, 10)}>{formatDeadline(deadline)}</time>
+                                </span>
+                            ) : (
+                                <span>No closing date given</span>
+                            )}
+                        </p>
+                        <div class="when-open mt-4 flex flex-wrap gap-3">
+                            {apply && (
+                                <Button href={apply} external={applyExternal} iconLeading={applyExternal ? undefined : "material-symbols:mail-outline"} icon={applyExternal ? "material-symbols:arrow-outward" : undefined}>
+                                    Apply
+                                </Button>
+                            )}
+                            <Button href="/vacancies/" variant="outline">All vacancies</Button>
+                        </div>
+                        <p class="when-closed mt-2 text-sm">
+                            This vacancy is closed. See the <a href="/vacancies/" class="text-primary underline">current vacancies</a>.
+                        </p>
+                    </div>
+                )
+            }
         </header>
 
         {
@@ -70,3 +107,18 @@ const isoDate = item.data.date.toISOString().slice(0, 10);
         </a>
     </article>
 </BaseLayout>
+
+<script>
+    import "../../scripts/deadlines";
+</script>
+
+<style>
+    .vacancy-notice {
+        margin-top: 2rem;
+        padding: 1.25rem 1.5rem;
+    }
+    .vacancy-notice:not([data-closed]) .when-closed,
+    .vacancy-notice[data-closed] .when-open {
+        display: none;
+    }
+</style>

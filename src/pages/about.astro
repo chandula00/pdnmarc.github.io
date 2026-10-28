@@ -223,7 +223,7 @@ const directorProfile = profileFor(director.name);
                                 </span>
                                 <span>
                                     <span class="block font-semibold text-heading">{a.name}</span>
-                                    <span class="block text-sm text-muted">{a.affiliation ?? "Affiliation not published"}</span>
+                                    {a.affiliation && <span class="block text-sm text-muted">{a.affiliation}</span>}
                                 </span>
                             </li>
                         ))
@@ -247,16 +247,15 @@ const directorProfile = profileFor(director.name);
                         </a>
                     </li>
                     <li>
-                        <a href={site.ai4covidUrl} target="_blank" rel="noopener" class="list__row list__row--link">
+                        <a href="/projects/demographic_analysis/" class="list__row list__row--link">
                             <span class="list__icon">
                                 <Icon name="material-symbols:verified-outline" />
                             </span>
                             <span class="flex-1">
-                                <span class="block font-semibold text-heading">AI4Covid</span>
-                                <span class="block text-sm text-muted">MARC's legacy AI4Covid initiative (external site)</span>
+                                <span class="block font-semibold text-heading">AI4Covid — IDRC grant</span>
+                                <span class="block text-sm text-muted">Demographic analysis of population structure and health outcomes</span>
                             </span>
-                            <Icon name="material-symbols:arrow-outward" class="list__end" />
-                            <span class="sr-only"> (opens in a new tab)</span>
+                            <Icon name="material-symbols:chevron-right" class="list__end" />
                         </a>
                     </li>
                 </ul>
