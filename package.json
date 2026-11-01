@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "dev:local": "MARC_CONTENT_ROOT=.. astro dev",
-    "build": "astro build",
-    "build:local": "MARC_CONTENT_ROOT=.. astro build",
+    "build": "astro build --force",
+    "build:local": "MARC_CONTENT_ROOT=.. astro build --force",
     "preview": "astro preview",
     "astro": "astro"
   },
