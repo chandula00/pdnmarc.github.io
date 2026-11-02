@@ -66,16 +66,16 @@ These entries are cloned into the website build as the news collection.
 
 ## :bar_chart: Google Sheet data source
 
-The website also pulls structured data from this Google Sheet:
-- `https://docs.google.com/spreadsheets/d/1vhvcqlhc_bTdGScX3iYQ4T9HTD2uLbKD22rsrI_qA8U/edit?usp=sharing`
+The website also pulls structured data from two Google Sheets:
+- **MARC Publications** (one tab per project, the main publications source): `https://docs.google.com/spreadsheets/d/15PZaRMJgW67znlJmfxWFvE1iHpc4NrFmBHFR3n7ldWc/edit?usp=sharing`
+- **Website data** (the original publications list and the social feed / social news items): `https://docs.google.com/spreadsheets/d/1vhvcqlhc_bTdGScX3iYQ4T9HTD2uLbKD22rsrI_qA8U/edit?usp=sharing`
 
-This sheet is used for:
-- publications
-- social feed / social news items
-
-During the update/build flow, the Python script [`python_scripts/get_data.py`](https://github.com/pdnMARC/pdnmarc.github.io/blob/main/python_scripts/get_data.py) downloads CSV exports from the relevant sheet tabs and writes:
+During the update/build flow, the Python script [`python_scripts/get_data.py`](https://github.com/pdnMARC/pdnmarc.github.io/blob/main/python_scripts/get_data.py) downloads exports of the sheets and writes:
+- `src/collection_publications/project_publications.json`
 - `src/collection_publications/publications.json`
 - `src/collection_news/social_news.json`
+
+The sheets are read on every deployment, and the deploy workflow also runs every Monday at 00:00 Sri Lanka time, so sheet changes go live within a week even when nothing else changes.
 
 So the website has two kinds of news-related content:
 - full Markdown news articles from [`marc_news`](https://github.com/pdnMARC/marc_news)
@@ -84,6 +84,8 @@ So the website has two kinds of news-related content:
 ## :rocket: Deployment flow
 
 The deployment workflow lives at [`.github/workflows/deploy.yaml`](https://github.com/pdnMARC/pdnmarc.github.io/blob/main/.github/workflows/deploy.yaml).
+
+It runs on a push to `main`, when a content repository reports a merged change, every Monday at 00:00 Sri Lanka time (Sunday 18:30 UTC), and on demand from the **Actions** tab.
 
 At a high level it does the following:
 1. Checks out this repository.
