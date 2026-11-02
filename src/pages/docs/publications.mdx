@@ -88,6 +88,11 @@ listed last.
 
 ## When changes appear
 
-The sheet is read when the website rebuilds. That happens whenever a change is merged into the website
-or one of the content repositories. To publish sheet changes straight away, a maintainer can run the
-**Deploy to GitHub Pages** workflow from the website repository's **Actions** tab (**Run workflow**).
+The sheet is read when the website rebuilds. That happens **every Monday at 00:00 Sri Lanka time**, so
+new papers and corrections made during the week are live by Monday morning. The website also rebuilds
+whenever a change is merged into the website or one of the content repositories. To publish sheet
+changes straight away, a maintainer can run the **Deploy to GitHub Pages** workflow from the website
+repository's **Actions** tab (**Run workflow**).
+
+If a rebuild fails, the live site stays as it was. Check the run in the **Actions** tab: a renamed
+column heading is the usual cause.

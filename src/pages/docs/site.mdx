@@ -106,8 +106,14 @@ The live site is built and deployed by the **Deploy to GitHub Pages** workflow. 
 
 - a change is pushed to the website's `main` branch;
 - a change is merged into `main` in one of the content repositories;
+- every Monday at 00:00 Sri Lanka time (Sunday 18:30 UTC), to pick up changes in the Google Sheets
+  (publications and the social feed);
 - a maintainer runs it by hand from the **Actions** tab (**Run workflow**), for example after editing the
   Google Sheets.
+
+GitHub turns off scheduled runs in a public repository after 60 days without any commits. If that
+happens, GitHub emails the repository admins and the workflow shows a banner in the **Actions** tab;
+select **Enable workflow** to turn the weekly rebuild back on.
 
 Pull requests to the website are built (but not deployed) by the **PR Build Check** workflow, so problems show
 up before merging.
