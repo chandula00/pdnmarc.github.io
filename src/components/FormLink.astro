@@ -1,9 +1,23 @@
 ---
-// "Use the profile form" box for the documentation guides (forms.profile in src/data/site.ts).
+// "Use the … form" box for the documentation guides (forms in src/data/site.ts).
 import Button from "./ui/Button.astro";
 import Icon from "./ui/Icon.astro";
 import Todo from "./ui/Todo.astro";
 import { forms, site } from "../data/site";
+
+interface Props {
+    form: keyof typeof forms;
+}
+
+const copy = {
+    profile: { name: "profile form", text: "Add or update your profile, photo and projects with one form.", repo: "marc_people" },
+    news: { name: "news form", text: "Send a news article or a vacancy, with photos, or correct a published article.", repo: "marc_news" },
+} satisfies Record<keyof typeof forms, { name: string; text: string; repo: string }>;
+
+const { form } = Astro.props;
+const href = forms[form];
+const { name, text, repo } = copy[form];
+const linkSubject = `${name[0].toUpperCase()}${name.slice(1)} link`;
 ---
 
 <div class="form-link surface-tonal not-prose">
@@ -12,12 +26,12 @@ import { forms, site } from "../data/site";
         <p class="form-link__title">No GitHub account needed</p>
         <p class="mt-1 text-[0.9375rem]">
             {
-                forms.profile ? (
-                    "Add or update your profile, photo and projects with one form."
+                href ? (
+                    text
                 ) : (
                     <>
-                        Ask the MARC website maintainers for the profile form link at{" "}
-                        <a href={`mailto:${site.email}?subject=${encodeURIComponent("Profile form link")}`} class="text-primary underline">
+                        Ask the MARC website maintainers for the {name} link at{" "}
+                        <a href={`mailto:${site.email}?subject=${encodeURIComponent(linkSubject)}`} class="text-primary underline">
                             {site.email}
                         </a>
                         .
@@ -27,14 +41,14 @@ import { forms, site } from "../data/site";
         </p>
     </div>
     {
-        forms.profile && (
-            <Button href={forms.profile} external icon="material-symbols:arrow-outward">
-                Open the profile form
+        href && (
+            <Button href={href} external icon="material-symbols:arrow-outward">
+                Open the {name}
             </Button>
         )
     }
 </div>
-{!forms.profile && <Todo>Set forms.profile in src/data/site.ts to the form's share link (marc_people/google-form/README.md, step 7).</Todo>}
+{!href && <Todo>Set forms.{form} in src/data/site.ts to the form's share link ({repo}/google-form/README.md, step 7).</Todo>}
 
 <style>
     .form-link {

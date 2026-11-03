@@ -5,13 +5,36 @@ description: Post a news article, a vacancy with an application deadline, or a s
 ---
 
 import Callout from "../../components/ui/Callout.astro";
+import FormLink from "../../components/FormLink.astro";
 
 The News page has two parts:
 
 - **News articles**: full stories with their own page, written in Markdown in the
   [marc_news repository](https://github.com/pdnMARC/marc_news). Vacancies are news articles too.
+  Send them with the **news form** (no GitHub account needed) or add them on GitHub.
 - **Social feed items**: short entries that link out to a Facebook, LinkedIn or web post, added as rows
   in the website data Google Sheet.
+
+## Use the news form
+
+<FormLink form="news" />
+
+- **New article:** give the title, the date, a one- or two-sentence summary and the full text. Each line
+  of the text becomes a paragraph, and lines starting with `-` become a list.
+- **Photos:** a cover photo, and optionally more photos shown under the article, with one line in
+  *Descriptions of the other photos* for each, in the same order. Photos are resized and their camera
+  and location data removed. Only send photos MARC may publish, with the agreement of anyone recognisable
+  in them.
+- **Vacancy:** answer *Yes* and give the deadline and an application link or email address.
+- **Correcting a published article:** choose *Change a published article*, paste the article's link from
+  the website, and fill in only what should change. New text replaces the whole text (the photos are
+  kept), so paste the full corrected version. The article's address never changes.
+
+Every night at midnight (Sri Lanka time) your answers become a change request. It goes live once a MARC
+maintainer approves it. If something can't be used, for example a link that doesn't match an article,
+a maintainer will be in touch.
+
+The rest of this guide is for adding articles on GitHub, and explains what each field means.
 
 ```text
 marc_news/
