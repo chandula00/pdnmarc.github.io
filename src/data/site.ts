@@ -130,16 +130,17 @@ export const contentRepos = {
     website: "https://github.com/pdnMARC/pdnmarc.github.io",
 };
 
-// Google Forms used by the documentation. Set `profile` to the form's share link once it exists
-// (marc_people/google-form/README.md, step 7); until then the guides ask people to contact MARC.
+// Google Forms used by the documentation. Set each to the form's share link once it exists
+// (google-form/README.md in marc_people and marc_news, step 7); until then the guides ask people to contact MARC.
 export const forms = {
     profile: "https://docs.google.com/forms/d/e/1FAIpQLSeXOCqNmVEKqgairmF4IRnbU388iqUDekWeDIOYbHRi7tNWUQ/viewform" as string | null,
+    news: "https://docs.google.com/forms/d/e/1FAIpQLScvU6iml7GpjHgCVHt69B5Dmy6BzSSkxaXH4P5hNbVqnMyAIQ/viewform" as string | null,
 };
 
 export const docs = [
     { href: "/docs/profiles/", label: "People profiles", icon: "material-symbols:person-outline", text: "Use the profile form, or edit on GitHub: photo, role, biography and links." },
     { href: "/docs/projects/", label: "Projects", icon: "material-symbols:science-outline", text: "Add a project, its team, cover image and description." },
-    { href: "/docs/news/", label: "News & vacancies", icon: "material-symbols:newspaper", text: "Post a news article, a vacancy with a deadline, or a social feed item." },
+    { href: "/docs/news/", label: "News & vacancies", icon: "material-symbols:newspaper", text: "Use the news form, or post on GitHub: articles, vacancies with a deadline, social feed items." },
     { href: "/docs/publications/", label: "Publications", icon: "material-symbols:menu-book-outline", text: "Add papers to the publications sheet and link them to projects and people." },
     { href: "/docs/site/", label: "Site pages", icon: "material-symbols:web", text: "For website maintainers: home photos, research areas, highlights and contact details." },
 ];
