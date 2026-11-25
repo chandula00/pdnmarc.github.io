@@ -1,0 +1,100 @@
+<!doctype html>
+<!--
+  Source of public/og-default.png, the image link previews show for the site (1200 × 630).
+  Uses the site's own fonts, colours and logo. To change it, edit this file, then render it
+  from the repository root with a headless Chromium, for example:
+
+    chrome --headless --hide-scrollbars --force-device-scale-factor=1 --window-size=1200,630 \
+      --screenshot=public/og-default.png "file://$PWD/design/og-default.html"
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MARC link preview image</title>
+<style>
+    @font-face {
+        font-family: "Manrope Variable";
+        src: url("../node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2") format("woff2");
+        font-weight: 200 800;
+    }
+
+    /* Site theme (src/styles/app.css) */
+    :root {
+        --primary: #0a76a4;
+        --secondary: #9e4245;
+        --heading: #1f1f1f;
+        --line: #dadce0;
+        --surface-tint: #f0f4f9;
+        --tint: #e3f1f8;
+        --shadow-md: 0 1px 2px rgba(60, 64, 67, 0.3), 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+    }
+
+    html, body { margin: 0; }
+    body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        position: relative;
+        background: var(--surface-tint);
+        font-family: "Manrope Variable", sans-serif;
+    }
+
+    /* Logo in a white circle, on a soft tint ring */
+    .ring {
+        position: absolute;
+        left: 300px; top: 315px;
+        width: 404px; height: 404px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: var(--tint);
+    }
+    .logo {
+        position: absolute;
+        left: 300px; top: 315px;
+        width: 340px; height: 340px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 0 0 1px var(--line), var(--shadow-md);
+    }
+
+    /* Text: eyebrow + title, vertically centred on the logo */
+    .text {
+        position: absolute;
+        left: 560px; top: 315px;
+        transform: translateY(-50%);
+    }
+    .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 0 0 22px;
+        font-size: 27px;
+        font-weight: 600;
+        letter-spacing: 0.005em;
+        color: var(--primary);
+    }
+    .bar { display: flex; height: 5px; }
+    .bar span { display: block; height: 100%; border-radius: 3px; }
+    .bar .b { width: 30px; background: var(--primary); }
+    .bar .r { width: 12px; margin-left: 4px; background: var(--secondary); }
+    h1 {
+        margin: 0;
+        font-size: 62px;
+        font-weight: 650;
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+        color: var(--heading);
+    }
+</style>
+</head>
+<body>
+    <div class="ring"></div>
+    <img class="logo" src="../src/assets/logo.png" alt="">
+
+    <div class="text">
+        <p class="eyebrow"><span class="bar"><span class="b"></span><span class="r"></span></span>University of Peradeniya</p>
+        <h1>Multidisciplinary<br>AI Research Centre</h1>
+    </div>
+</body>
+</html>
