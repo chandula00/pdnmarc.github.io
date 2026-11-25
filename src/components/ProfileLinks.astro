@@ -1,0 +1,81 @@
+---
+// Round icon buttons to a person's own pages (the `links` of a marc_people profile).
+// Each opens in a new tab; the accessible name says whose page it is, the tooltip says what it is.
+import Icon from "./ui/Icon.astro";
+import type { ProfileLinksData } from "../lib/people";
+
+interface Props {
+    name: string;
+    links: ProfileLinksData;
+    align?: "center" | "start";
+    class?: string;
+}
+const { name, links, align = "center", class: className } = Astro.props;
+
+/** Button order, labels and icons. */
+const kinds: { key: keyof ProfileLinksData; label: string; icon: string }[] = [
+    { key: "website", label: "Personal website", icon: "material-symbols:language" },
+    { key: "university", label: "University profile", icon: "material-symbols:account-balance-outline" },
+    { key: "scholar", label: "Google Scholar", icon: "academicons:google-scholar" },
+    { key: "linkedin", label: "LinkedIn", icon: "mdi:linkedin" },
+];
+const items = kinds.flatMap((k) => (links[k.key] ? [{ ...k, href: links[k.key]! }] : []));
+---
+
+{
+    items.length > 0 && (
+        <ul class:list={["plinks", `plinks--${align}`, className]} aria-label={`Links for ${name}`}>
+            {items.map((l) => (
+                <li>
+                    <a
+                        href={l.href}
+                        target="_blank"
+                        rel="noopener"
+                        class="plinks__btn"
+                        title={l.label}
+                        aria-label={`${l.label}: ${name} (opens in a new tab)`}
+                    >
+                        <Icon name={l.icon} />
+                    </a>
+                </li>
+            ))}
+        </ul>
+    )
+}
+
+<style>
+    .plinks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .plinks--center {
+        justify-content: center;
+    }
+    .plinks--start {
+        justify-content: flex-start;
+    }
+    .plinks__btn {
+        display: grid;
+        place-items: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 50%;
+        background: var(--color-soft-2);
+        color: var(--color-body);
+        transition:
+            background-color var(--t-fast) var(--ease-brand),
+            color var(--t-fast) var(--ease-brand);
+    }
+    .plinks__btn:hover {
+        background: var(--tint);
+        color: var(--tint-content);
+    }
+    .plinks__btn:focus-visible {
+        border-radius: 50%;
+    }
+    .plinks__btn :global(svg) {
+        width: 1.125rem;
+        height: 1.125rem;
+    }
+</style>

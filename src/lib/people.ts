@@ -5,6 +5,8 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 
 export type Person = CollectionEntry<"people">;
+/** A profile's `links`: website, university profile, Google Scholar, LinkedIn. */
+export type ProfileLinksData = NonNullable<Person["data"]["links"]>;
 type Project = CollectionEntry<"projects">;
 
 export const normEmail = (email: string) => email.trim().toLowerCase();
@@ -13,7 +15,15 @@ export const normEmail = (email: string) => email.trim().toLowerCase();
 export const isPast = (person: Person) => person.data.status === "past";
 
 /** All of a person's addresses, normalised. */
-export const personEmails = (person: Person) => [person.data.email, ...person.data.otherEmails].map(normEmail);
+export const personEmails = (person: Person) =>
+    [person.data.email, ...person.data.otherEmails].filter((e): e is string => Boolean(e)).map(normEmail);
+
+/** A profile with `page: false` (leadership, advisors) has only its card on the People page. */
+export const personUrl = (person: Person): string | undefined => (person.data.page ? `/people/${person.id}/` : undefined);
+
+/** Order within a group: `order` first (1, 2, …), then everyone without one, by name. */
+export const byOrderThenName = (a: Person, b: Person) =>
+    (a.data.order ?? Infinity) - (b.data.order ?? Infinity) || a.data.name.localeCompare(b.data.name);
 
 /**
  * Lower case, without a leading title, full stops as spaces, ", " after commas, single spaces:

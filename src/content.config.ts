@@ -48,7 +48,8 @@ const people = defineCollection({
         }
     ),
     schema: ({ image }) => z.object({
-        email: z.string().email(),
+        // Links the profile to projects (never shown). Optional for people who are on no project page.
+        email: z.string().email().optional(),
         post: z.string(),
         name: z.string(),
         photo: image().optional(),
@@ -59,6 +60,21 @@ const people = defineCollection({
         // Past members stay on the site (and linked to their projects and papers) under "Past members".
         status: z.enum(["current", "past"]).default("current"),
         currentPosition: z.string().optional(), // where a past member is now, e.g. "PhD, Columbia University, USA"
+        // People page card: a line under the role (portfolio, satellite centre or institution), the
+        // position within the role's group (1 first; unordered people follow by name), and round
+        // buttons to the person's own pages (src/components/ProfileLinks.astro).
+        detail: z.string().optional(),
+        order: z.number().int().positive().optional(),
+        links: z
+            .object({
+                website: z.string().url().optional(),
+                university: z.string().url().optional(),
+                scholar: z.string().url().optional(),
+                linkedin: z.string().url().optional(),
+            })
+            .optional(),
+        // false: only the card on the People page, no page of its own (e.g. leadership and advisors).
+        page: z.boolean().default(true),
     })
 
 });

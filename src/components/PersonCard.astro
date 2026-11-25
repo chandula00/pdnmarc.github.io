@@ -1,22 +1,29 @@
 ---
 // Person tile (spec §9.9): round photo, name, role — the layout Google uses on team pages.
 // Emails are never printed (decision D12). No photo → neutral avatar icon.
+// Two kinds: a whole-card link to a profile page (`href`), or, with `links`, a card with round
+// buttons to the person's own pages; its name links to `href` when there is one.
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import Icon from "./ui/Icon.astro";
+import ProfileLinks from "./ProfileLinks.astro";
+import type { ProfileLinksData } from "../lib/people";
 
 interface Props {
     name: string;
     role: string;
-    href: string;
+    href?: string;
     photo?: ImageMetadata;
     affiliation?: string;
+    links?: ProfileLinksData;
     headingLevel?: "h3" | "h4";
 }
-const { name, role, href, photo, affiliation, headingLevel: H = "h3" } = Astro.props;
+const { name, role, href, photo, affiliation, links, headingLevel: H = "h3" } = Astro.props;
+const asLink = Boolean(href) && !links;
+const Root = asLink ? "a" : "article";
 ---
 
-<a href={href} class="person">
+<Root href={asLink ? href : undefined} class:list={["person", asLink && "person--link"]}>
     <span class="person__photo">
         {
             photo ? (
@@ -28,10 +35,13 @@ const { name, role, href, photo, affiliation, headingLevel: H = "h3" } = Astro.p
             )
         }
     </span>
-    <H class="person__name">{name}</H>
+    <H class="person__name">
+        {!asLink && href ? <a href={href} class="person__name-link">{name}</a> : name}
+    </H>
     <p class="person__role">{role}</p>
     {affiliation && <p class="person__aff">{affiliation}</p>}
-</a>
+    {links && <ProfileLinks name={name} links={links} class="person__links" />}
+</Root>
 
 <style>
     .person {
@@ -44,7 +54,7 @@ const { name, role, href, photo, affiliation, headingLevel: H = "h3" } = Astro.p
         text-align: center;
         transition: background-color var(--t-fast) var(--ease-brand);
     }
-    .person:hover {
+    .person--link:hover {
         background: var(--color-soft);
     }
     .person__photo {
@@ -76,8 +86,10 @@ const { name, role, href, photo, affiliation, headingLevel: H = "h3" } = Astro.p
         margin-top: 1rem;
         font-size: 1.0625rem;
         line-height: 1.35;
+        text-wrap: balance;
     }
-    .person:hover .person__name {
+    .person--link:hover .person__name,
+    .person__name-link:hover {
         color: var(--color-primary);
         text-decoration: underline;
         text-underline-offset: 3px;
@@ -91,5 +103,11 @@ const { name, role, href, photo, affiliation, headingLevel: H = "h3" } = Astro.p
         margin-top: 0.125rem;
         font-size: 0.8125rem;
         color: var(--color-muted);
+        text-wrap: balance;
+    }
+    /* Buttons sit at the bottom so rows of cards line up whatever the text length. */
+    .person :global(.person__links) {
+        margin-top: auto;
+        padding-top: 1rem;
     }
 </style>

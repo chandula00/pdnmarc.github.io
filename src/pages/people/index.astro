@@ -3,17 +3,17 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PersonCard from "../../components/PersonCard.astro";
 import Tag from "../../components/ui/Tag.astro";
-import { isPast } from "../../lib/people";
+import { byOrderThenName, isPast, personUrl } from "../../lib/people";
 
 const everyone = await getCollection("people");
 // Current members are grouped by role; past members (`status: past`) get their own section last.
 const people = everyone.filter((p) => !isPast(p));
 
 // Fixed group order (spec §7.6). Every post lands in a group; unknown posts fall
-// into "Team" instead of being dropped (fixes B1).
+// into "Team" instead of being dropped (fixes B1). Within a group: by post, then `order`, then name.
 const GROUPS = [
     { id: "director", title: "Director", tag: "Leadership", posts: ["Director"] },
-    { id: "deputy-directors", title: "Deputy Directors", tag: "Portfolios", posts: ["Deputy Director"] },
+    { id: "deputy-directors", title: "Deputy Directors", tag: "Leadership", posts: ["Deputy Director"] },
     { id: "members", title: "Members", tag: "Academic staff", posts: ["Member"] },
     { id: "advisors", title: "Advisors", tag: "Advisory", posts: ["Advisor"] },
     {
@@ -25,28 +25,27 @@ const GROUPS = [
     { id: "volunteers", title: "Volunteers", tag: "Volunteers", posts: ["Volunteer"] },
 ];
 const known = new Set(GROUPS.flatMap((g) => g.posts));
-const byName = (a: (typeof people)[number], b: (typeof people)[number]) => a.data.name.localeCompare(b.data.name);
 
 const groups = [
     ...GROUPS.map((g) => ({
         ...g,
         people: people
             .filter((p) => g.posts.includes(p.data.post))
-            .sort((a, b) => g.posts.indexOf(a.data.post) - g.posts.indexOf(b.data.post) || byName(a, b)),
+            .sort((a, b) => g.posts.indexOf(a.data.post) - g.posts.indexOf(b.data.post) || byOrderThenName(a, b)),
     })),
     {
         id: "team",
         title: "Team",
         tag: "MARC",
         posts: [],
-        people: people.filter((p) => !known.has(p.data.post)).sort(byName),
+        people: people.filter((p) => !known.has(p.data.post)).sort(byOrderThenName),
     },
     {
         id: "past-members",
         title: "Past members",
         tag: "Alumni",
         posts: [],
-        people: everyone.filter(isPast).sort(byName),
+        people: everyone.filter(isPast).sort(byOrderThenName),
     },
 ].filter((g) => g.people.length > 0);
 ---
@@ -82,9 +81,14 @@ const groups = [
                                 <PersonCard
                                     name={person.data.name}
                                     role={person.data.post}
-                                    href={`/people/${person.id}/`}
+                                    href={personUrl(person)}
                                     photo={person.data.photo}
-                                    affiliation={isPast(person) && person.data.currentPosition ? `Now: ${person.data.currentPosition}` : undefined}
+                                    affiliation={
+                                        isPast(person) && person.data.currentPosition
+                                            ? `Now: ${person.data.currentPosition}`
+                                            : person.data.detail
+                                    }
+                                    links={person.data.links}
                                 />
                             </li>
                         ))}

@@ -59,7 +59,7 @@
     "id": "2de9c9ef7c7c",
     "title": "Unsupervised learning reveals global demographic configurations and national trajectories from population pyramids",
     "type": "Journal",
-    "venue": "Humanities and Social Sciences Communications",
+    "venue": "Nature Humanities and Social Sciences Communications",
     "authors": "Athulya Ratnayake, Lelumi Edirisnghe, Thisumi Wijesinghe, Roshan Godaliyadda, Parakrama Ekanayake, Vijitha Herath, Samath Dharmaratne",
     "status": "Under review",
     "doi": "",
@@ -109,7 +109,7 @@
     "projects": [
       "Socioeconomic Mobility"
     ],
-    "year": 2026
+    "year": null
   },
   {
     "id": "162c15ea6cb6",
@@ -801,7 +801,7 @@
     "id": "a05f55307f6c",
     "title": "COSMO-INR: Complex Sinusoidal Modulation for Implicit Neural Representations",
     "type": "Conference",
-    "venue": "The Fourteenth International Conference on Learning Representations (ICLR 2025)",
+    "venue": "The Fourteenth International Conference on Learning Representations (ICLR 2026)",
     "authors": "Pandula Thennakoon,Avishka Ranasinghe,Mario De Silva,Buwaneka Epakanda, Roshan Godaliyadda, Mervyn Ekanayake,Vijitha Herath",
     "status": "Accepted",
     "doi": "",
@@ -809,13 +809,13 @@
     "projects": [
       "INR"
     ],
-    "year": 2025
+    "year": 2026
   },
   {
-    "id": "d1a1809ca2c2",
-    "title": "ScaLe-INR: Scale and Learn Implicit Neural Representations",
+    "id": "e16d9a0c07ed",
+    "title": "CoRe-INR: Coordinate Rescaling for Spectral Expansion and Convergence Improvement for Implicit Neural Representations",
     "type": "Conference",
-    "venue": "Forty-First AAAI Conference on Artificial Intelligence (AAAI-27)",
+    "venue": "The Fifteenth International Conference on Learning Representations (ICLR 2027)",
     "authors": "Buwaneka Epakanda, Athulya Rathnayaka, Pandula Thennakoon, Mario De Silva, Avishka Ranasinghe, Roshan Godaliyadda, Mervyn Ekanayake",
     "status": "Under review",
     "doi": "",
@@ -823,13 +823,13 @@
     "projects": [
       "INR"
     ],
-    "year": null
+    "year": 2027
   },
   {
     "id": "b8ea812e19a4",
     "title": "From Parallelism to Specialisation: SSA-Guided Multi-Branch Implicit Neural Representations",
     "type": "Conference",
-    "venue": "Forty-First AAAI Conference on Artificial Intelligence (AAAI-27)",
+    "venue": "The Fifteenth International Conference on Learning Representations (ICLR 2027)",
     "authors": "Athulya Ratnayake, Buwaneka Epakanda, Sajana, Bogahawatta, Roshan Godaliyadda, Parakrama Ekanayake",
     "status": "Under review",
     "doi": "",
@@ -837,7 +837,7 @@
     "projects": [
       "INR"
     ],
-    "year": null
+    "year": 2027
   },
   {
     "id": "b3ec1c33f7bf",
@@ -857,7 +857,7 @@
     "id": "58d6b114d0f4",
     "title": "Trace Energy Maching for HIgh Fidelity Image Generation",
     "type": "Conference",
-    "venue": "Forty-First AAAI Conference on Artificial Intelligence (AAAI-27)",
+    "venue": "The Fifteenth International Conference on Learning Representations (ICLR 2027)",
     "authors": "Sandunika Ranasinghe, Shakthi Perera, Dilum Fernando, Malshan, Pathum, Roshan Godaliyadda, Mervyn Parakrama Ekanayake",
     "status": "Under review",
     "doi": "",
@@ -865,21 +865,22 @@
     "projects": [
       "Diffusion"
     ],
-    "year": null
+    "year": 2027
   },
   {
     "id": "85e71a3e15a4",
     "title": "Discrete Diffusion for Single-Cell Gene Expression Imputation",
     "type": "Conference",
-    "venue": "Forty-First AAAI Conference on Artificial Intelligence (AAAI-27)",
+    "venue": "The Fifteenth International Conference on Learning Representations (ICLR 2027)",
     "authors": "Chandula Adhikari, Nethali Wijekoon, Sayumi Muthukumarana, Roshan Godaliyadda, Mervyn Parakrama Ekanayake",
     "status": "Under review",
     "doi": "",
     "url": "",
     "projects": [
-      "Diffusion"
+      "Diffusion",
+      "Genetics"
     ],
-    "year": null
+    "year": 2027
   },
   {
     "id": "20883c0c9df9",
@@ -997,15 +998,15 @@
     "id": "5af64b3941bf",
     "title": "LiteGAR: Input-Adaptive Fusion for Single-Stage Relational Reasoning in Group Activity Recognition",
     "type": "Conference",
-    "venue": "WACV2026",
+    "venue": "WACV 2027",
     "authors": "Narthana Sivalingam, Santhirarajah Sivasthigan, Buddhi Wijenayake Roshan Godaliyadda, Vijitha Herath, Parakrama Ekanayake",
-    "status": "Under review",
+    "status": "Accepted",
     "doi": "",
     "url": "",
     "projects": [
       "CV_Action"
     ],
-    "year": null
+    "year": 2027
   },
   {
     "id": "ad9d4e1a906d",
