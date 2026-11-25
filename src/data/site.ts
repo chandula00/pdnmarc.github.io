@@ -10,6 +10,7 @@ export const site = {
     universityUrl: "https://www.pdn.ac.lk/",
     facultyUrl: "https://eng.pdn.ac.lk/",
     address: "Faculty of Engineering, University of Peradeniya, Sri Lanka",
+    established: "August 2024",
     email: "marc@eng.pdn.ac.lk",
     // Not published on the official MARC website (spec §1.4). Replace when MARC provides one.
     telephone: null as string | null,
@@ -52,6 +53,7 @@ export const projectPublicationTabs: Record<string, string[]> = {
     gait_and_posture: ["Wearable"], // one "Wearable" tab covers both wearable projects
     biomechanics: ["Wearable"],
     lung_sound_analysis: ["Lung Project"],
+    gene_expression_imputation: ["Genetics"],
 };
 
 // Display names for sheet tabs that the spreadsheet export alters (e.g. "/" is dropped from "HSI/CD").
@@ -215,6 +217,9 @@ export const statements = {
         "To leverage AI research and innovation to drive sustainable development and societal progress in Sri Lanka, developing cutting-edge AI solutions that address real-world challenges.",
     vision:
         "A future where AI-powered technologies play a central role in shaping a more inclusive, equitable and sustainable society — leading AI research and education on a global scale.",
+    /** Under the Director's name on the About page. */
+    directorNote:
+        "Leads MARC across its six research areas, supported by five Deputy Directors covering planning, research, publicity and outreach, development and incubation, and commercialization.",
 };
 
 export const disciplines = ["Engineering", "Science", "Agriculture", "Medicine", "Humanities"];
@@ -241,27 +246,5 @@ export const audiences = [
     { icon: "material-symbols:language", title: "International", text: "Institutional partnerships" },
 ];
 
-// Leadership as published on the official MARC team page (spec A.4).
-// Phase 2 moves these into the marc_people collection; until then /about reads them from here.
-export const leadership = {
-    director: {
-        name: "Prof. Janaka Ekanayake",
-        role: "Director — Multidisciplinary AI Research Centre",
-        affiliation: "University of Peradeniya, Sri Lanka",
-        note: "Leads MARC across its six research areas, supported by five Deputy Directors covering planning, development and incubation, research, publicity and outreach, and commercialization.",
-        linkedin: "https://uk.linkedin.com/in/prof-janaka-ekanayake-943817a",
-    },
-    deputies: [
-        { name: "Prof. Roshan Ragel", portfolio: "Planning" },
-        { name: "Prof. Vijitha Herath", portfolio: "Development and Incubation" },
-        { name: "Prof. Roshan Godaliyadda", portfolio: "Research" },
-        { name: "Dr. Asitha Bandaranayake", portfolio: "Publicity and Outreach" },
-        { name: "Prof. Ruwan Jayasinghe", portfolio: "Commercialization" },
-    ],
-    advisors: [
-        { name: "Prof. Ir. Dr. Tiong Sieh Kiong", affiliation: "Institution of Sustainable Energy, Universiti Tenaga Nasional, Malaysia" },
-        { name: "Prof. Muthucumaru Maheswaran", affiliation: "School of Computer Science, McGill University, Canada" },
-        // Affiliation not published (spec §1.4).
-        { name: "Dr. Romesh Ranawana", affiliation: null as string | null },
-    ],
-};
+// Leadership, members and advisors are marc_people profiles (posts Director, Deputy Director, Member,
+// Advisor), with their photos in marc_people/profiles/photos/.

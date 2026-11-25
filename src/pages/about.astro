@@ -10,12 +10,13 @@ import Stat from "../components/ui/Stat.astro";
 import Todo from "../components/ui/Todo.astro";
 import Button from "../components/ui/Button.astro";
 import CollaborateBand from "../components/CollaborateBand.astro";
+import ProfileLinks from "../components/ProfileLinks.astro";
 import logo from "../assets/logo.png";
 import uopLogo from "../assets/UOP_logo.png";
-import { site, statements, disciplines, ecosystem, leadership } from "../data/site";
+import { site, statements, disciplines, ecosystem } from "../data/site";
 import { getResearchAreas } from "../lib/research";
 import { getAllPublications } from "../lib/publications";
-import { isPast } from "../lib/people";
+import { byOrderThenName, isPast, personUrl } from "../lib/people";
 
 const [projects, publications, people] = await Promise.all([
     getCollection("projects"),
@@ -29,14 +30,12 @@ const stats = [
     { value: people.filter((p) => !isPast(p)).length, label: "Current members" },
 ];
 
-// Link leadership names to published profiles where one exists.
-const norm = (n: string) =>
-    n
-        .toLowerCase()
-        .replace(/\b(prof|dr|ir)\.?\s/g, "")
-        .replace(/[^a-z]/g, "");
-const profileFor = (name: string) =>
-    people.find((p) => [p.data.name, ...p.data.otherNames].some((n) => norm(n) === norm(name)));
+// Leadership and advisors are marc_people profiles, in their People page order; names link to a
+// profile page where the profile has one.
+const withPost = (post: string) => people.filter((p) => !isPast(p) && p.data.post === post).sort(byOrderThenName);
+const director = withPost("Director")[0];
+const deputies = withPost("Deputy Director");
+const advisors = withPost("Advisor");
 const initials = (name: string) =>
     name
         .replace(/\b(Prof|Dr|Ir)\.?\s/g, "")
@@ -45,8 +44,7 @@ const initials = (name: string) =>
         .map((w) => w[0])
         .slice(-2)
         .join("");
-const director = leadership.director;
-const directorProfile = profileFor(director.name);
+const directorUrl = director && personUrl(director);
 ---
 
 <BaseLayout
@@ -76,6 +74,7 @@ const directorProfile = profileFor(director.name);
                 </div>
                 <p class="text-h4 mt-6 font-semibold text-heading">A research centre of the {site.university}</p>
                 <p class="mt-1 text-[0.9375rem]">{site.address}</p>
+                <p class="mt-1 text-sm text-muted">Established {site.established}</p>
                 <div class="mt-6 border-t border-line-soft pt-5">
                     <p class="text-sm font-semibold text-heading">Multidisciplinary by design</p>
                     <ul class="mt-3 flex flex-wrap gap-2">
@@ -117,47 +116,65 @@ const directorProfile = profileFor(director.name);
         <h2 id="leadership" class="text-h2">Leadership</h2>
 
         <div class="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14">
-            <article class="director card-surface">
-                <div class="director__avatar" aria-hidden="true">{initials(director.name)}</div>
-                <div>
-                    <Tag variant="red">Director</Tag>
-                    <h3 class="text-h3 mt-3">
-                        {
-                            directorProfile ? (
-                                <a href={`/people/${directorProfile.id}/`} class="hover:text-primary hover:underline">{director.name}</a>
-                            ) : (
-                                director.name
-                            )
-                        }
-                    </h3>
-                    <p class="mt-1 text-[0.9375rem] text-heading">{director.role}</p>
-                    <p class="text-sm text-muted">{director.affiliation}</p>
-                    <p class="mt-4">{director.note}</p>
-                    <a href={director.linkedin} target="_blank" rel="noopener" class="link-arrow mt-4">
-                        LinkedIn profile <Icon name="material-symbols:arrow-outward" />
-                        <span class="sr-only"> (opens in a new tab)</span>
-                    </a>
-                </div>
-            </article>
+            {
+                director && (
+                    <article class="director card-surface">
+                        {director.data.photo ? (
+                            <Image src={director.data.photo} alt="" widths={[120, 240]} sizes="120px" class="director__avatar" />
+                        ) : (
+                            <div class="director__avatar" aria-hidden="true">
+                                {initials(director.data.name)}
+                            </div>
+                        )}
+                        <div>
+                            <Tag variant="red">Director</Tag>
+                            <h3 class="text-h3 mt-3">
+                                {directorUrl ? (
+                                    <a href={directorUrl} class="hover:text-primary hover:underline">
+                                        {director.data.name}
+                                    </a>
+                                ) : (
+                                    director.data.name
+                                )}
+                            </h3>
+                            <p class="mt-1 text-[0.9375rem] text-heading">Director — {site.name}</p>
+                            <p class="text-sm text-muted">{site.university}, Sri Lanka</p>
+                            <p class="mt-4">{statements.directorNote}</p>
+                            {director.data.links && (
+                                <ProfileLinks name={director.data.name} links={director.data.links} align="start" class="mt-5" />
+                            )}
+                        </div>
+                    </article>
+                )
+            }
 
             <div>
                 <h3 class="text-h4">Deputy Directors</h3>
                 <ul class="deputies mt-4">
                     {
-                        leadership.deputies.map((d) => {
-                            const profile = profileFor(d.name);
+                        deputies.map((d) => {
+                            const url = personUrl(d);
+                            const avatar = d.data.photo ? (
+                                <Image src={d.data.photo} alt="" width={160} class="deputy__img" />
+                            ) : (
+                                <span class="deputy__img deputy__img--empty">
+                                    <Icon name="material-symbols:person-outline" />
+                                </span>
+                            );
                             return (
                                 <li>
-                                    {profile ? (
-                                        <a href={`/people/${profile.id}/`} class="deputy deputy--link">
-                                            <span class="deputy__name">{d.name}</span>
-                                            <span class="deputy__role">{d.portfolio}</span>
+                                    {url ? (
+                                        <a href={url} class="deputy deputy--link">
+                                            {avatar}
+                                            <span class="deputy__name">{d.data.name}</span>
+                                            <span class="deputy__role">{d.data.detail}</span>
                                             <Icon name="material-symbols:chevron-right" class="deputy__chev" />
                                         </a>
                                     ) : (
                                         <div class="deputy">
-                                            <span class="deputy__name">{d.name}</span>
-                                            <span class="deputy__role">{d.portfolio}</span>
+                                            {avatar}
+                                            <span class="deputy__name">{d.data.name}</span>
+                                            <span class="deputy__role">{d.data.detail}</span>
                                         </div>
                                     )}
                                 </li>
@@ -165,9 +182,12 @@ const directorProfile = profileFor(director.name);
                         })
                     }
                 </ul>
+                <a href="/people/#deputy-directors" class="link-arrow mt-5">
+                    Meet the full team, with links to each person's work <Icon name="material-symbols:arrow-forward" />
+                </a>
                 <Todo ref="§7.2, §18" class="mt-6">
                     Signed message from the Director. Until it arrives, do not present placeholder text as the
-                    Director's own words. Also needed: a Director photograph of at least 800 px.
+                    Director's own words.
                 </Todo>
             </div>
         </div>
@@ -218,14 +238,18 @@ const directorProfile = profileFor(director.name);
                 <p class="mt-2 text-muted">International advisors and their institutions.</p>
                 <ul class="list mt-6">
                     {
-                        leadership.advisors.map((a) => (
+                        advisors.map((a) => (
                             <li class="list__row">
-                                <span class="list__icon">
-                                    <Icon name="material-symbols:account-balance-outline" />
-                                </span>
+                                {a.data.photo ? (
+                                    <Image src={a.data.photo} alt="" width={160} class="list__photo" />
+                                ) : (
+                                    <span class="list__icon">
+                                        <Icon name="material-symbols:account-balance-outline" />
+                                    </span>
+                                )}
                                 <span>
-                                    <span class="block font-semibold text-heading">{a.name}</span>
-                                    {a.affiliation && <span class="block text-sm text-muted">{a.affiliation}</span>}
+                                    <span class="block font-semibold text-heading">{a.data.name}</span>
+                                    {a.data.detail && <span class="block text-sm text-muted">{a.data.detail}</span>}
                                 </span>
                             </li>
                         ))
@@ -351,17 +375,19 @@ const directorProfile = profileFor(director.name);
         align-items: start;
         padding: clamp(1.5rem, 3vw, 2rem);
     }
-    .director__avatar {
+    .director :global(.director__avatar) {
         display: grid;
         place-items: center;
-        width: 80px;
-        height: 80px;
+        width: 120px;
+        height: 120px;
         border-radius: 50%;
+        object-fit: cover;
+        object-position: center 15%;
         background: var(--tint);
         color: var(--tint-content);
         font-family: var(--font-head);
         font-weight: 600;
-        font-size: 1.5rem;
+        font-size: 1.75rem;
     }
     @media (max-width: 480px) {
         .director {
@@ -374,23 +400,41 @@ const directorProfile = profileFor(director.name);
     }
     .deputy {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: auto 1fr auto;
         align-items: center;
         column-gap: 1rem;
-        padding: 0.875rem 0.5rem;
+        padding: 0.75rem 0.5rem;
         border-bottom: 1px solid var(--color-line);
     }
+    .deputy :global(.deputy__img) {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center 15%;
+        background: var(--color-soft-2);
+        color: var(--color-muted);
+    }
+    .deputy__img--empty :global(svg) {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
     .deputy__name {
+        grid-column: 2;
         font-weight: 600;
         color: var(--color-heading);
     }
     .deputy__role {
-        grid-column: 1;
+        grid-column: 2;
         font-size: 0.875rem;
         color: var(--color-muted);
     }
     .deputy :global(.deputy__chev) {
-        grid-column: 2;
+        grid-column: 3;
         grid-row: 1 / span 2;
         width: 1.25rem;
         height: 1.25rem;
@@ -490,6 +534,15 @@ const directorProfile = profileFor(director.name);
     .list__icon :global(svg) {
         width: 1.25rem;
         height: 1.25rem;
+    }
+    .list__row :global(.list__photo) {
+        flex: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center 15%;
+        background: var(--color-soft-2);
     }
     .list__row :global(.list__end) {
         width: 1.25rem;

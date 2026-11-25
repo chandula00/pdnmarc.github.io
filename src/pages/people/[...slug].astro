@@ -11,7 +11,8 @@ import { publicationsForPerson, projectLinkMap } from "../../lib/publications";
 import { isOnProject, isPast } from "../../lib/people";
 
 export async function getStaticPaths() {
-    const people = await getCollection("people");
+    // `page: false` profiles (leadership, advisors) have only their card on the People page.
+    const people = (await getCollection("people")).filter((person) => person.data.page);
     return people.map((person) => ({
         params: { slug: person.id },
         props: { person },

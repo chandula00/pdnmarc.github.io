@@ -55,7 +55,8 @@ link in `forms.profile` or `forms.news` in `src/data/site.ts` so the guides show
 | Home page research highlights | `highlights` in `src/data/site.ts` |
 | Research areas (text and cover images) | One Markdown file per area in `src/data/research/` |
 | About page text, mission and vision | `statements` and `ecosystem` in `src/data/site.ts` |
-| Leadership and advisors on the About page | `leadership` in `src/data/site.ts` |
+| Director, Deputy Directors, Members and Advisors (People page cards and About page) | Their profiles and photos in `marc_people`, like everyone else's. See [Leadership cards](#leadership-cards). |
+| The Director's note on the About page | `statements.directorNote` in `src/data/site.ts` |
 | Contact details, address, email, telephone | `site` in `src/data/site.ts` |
 | Social media links | `socials` in `src/data/site.ts` |
 | Main menu and footer links | `nav` and `footerColumns` in `src/data/site.ts` |
@@ -68,6 +69,32 @@ Put 1 to 5 landscape photos (at least 1600 pixels wide) in `src/assets/home/`, n
 `02-….jpg` and so on; the first is the large one. Add a description of each to `homePhotos.alt` in
 `src/data/site.ts`. Only use photos MARC has the right to publish, with consent from anyone recognisable
 in them.
+
+## Leadership cards
+
+The Director, Deputy Directors, Members and Advisors are profiles in `marc_people`, like everyone else,
+with posts `Director`, `Deputy Director`, `Member` and `Advisor`. The People page shows each of them as a
+card with round buttons to their own pages, and the About page lists the Director, Deputy Directors and
+Advisors. Their profiles use a few extra fields (see [Card fields](/docs/profiles/#card-fields)):
+
+```yaml
+---
+post: Deputy Director
+name: "Prof. Roshan Ragel"
+photo: ./photos/prof_roshan_ragel.jpg
+detail: "Planning"        # line under the role: portfolio, satellite centre or institution
+order: 1                  # position within the group, 1 first
+page: false               # card only, no page of their own
+links:
+  university: "https://people.ce.pdn.ac.lk/staff/academic/roshan-ragel/"
+  scholar: "https://scholar.google.com/citations?user=UTYj8usAAAAJ"
+  linkedin: "https://www.linkedin.com/in/roshanragel/"
+---
+```
+
+Use a square photo (at least 400 × 400 pixels, face in the middle) in `profiles/photos/`. Leave out a link
+they don't have and its button disappears; leave out `photo` and the card shows a neutral avatar. Someone
+with a biography can keep their page: leave out `page: false`, and the name on their card links to it.
 
 ## Research areas
 

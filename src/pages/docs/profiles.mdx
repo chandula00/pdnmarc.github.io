@@ -187,7 +187,7 @@ described in [Changing your email or name](#changing-your-email-or-name).
 
 | Field | Required | Linked from | Purpose |
 | --- | --- | --- | --- |
-| `email` | Yes | `projectMembers` and `supervisors` in [project files](/docs/projects/) | Your main address and unique identifier. Never shown on the website. |
+| `email` | Yes, unless you are on no project | `projectMembers` and `supervisors` in [project files](/docs/projects/) | Your main address and unique identifier. Never shown on the website. |
 | `otherEmails` | No | The same project lists | Extra addresses projects may use for you, one per line. Each address may appear in only one profile. |
 | `name` | Yes | The `Authors` column of the [publications sheet](/docs/publications/) | Your display name, and the first form used to find your papers. Titles such as Prof. or Dr. are ignored. |
 | `otherNames` | No | The same Authors column | Other forms of your name in author lists, one per line, at least two words each. |
@@ -198,7 +198,7 @@ Email matching ignores upper and lower case, so `Jane.Doe@…` and `jane.doe@…
 
 | Field | Required | Purpose |
 | --- | --- | --- |
-| `post` | Yes | Your role. Use exactly one of `Director`, `Deputy Director`, `Project Coordinator`, `Research Engineer`, `Research Assistant`, `Research Intern` or `Volunteer`. The People page groups people by role; see [Roles](#roles). |
+| `post` | Yes | Your role. Use exactly one of `Director`, `Deputy Director`, `Member`, `Advisor`, `Project Coordinator`, `Research Engineer`, `Research Assistant`, `Research Intern` or `Volunteer`. The People page groups people by role; see [Roles](#roles). |
 | `photo` | No | Path to your photo, starting with `./photos/`. Without one, a neutral avatar is shown. |
 | `status` | No | `current` (the default) or `past`. Past members are listed under **Past members**. See [When you leave MARC](#when-you-leave-marc). |
 | `currentPosition` | No | For past members only: where you are now, for example `"PhD, Columbia University, USA"`. Shown as "Now: …". |
@@ -208,6 +208,28 @@ The **file name** sets your page address: `Jane_Doe.md` becomes `/people/jane_do
 depends on it, but renaming the file changes the address, so links shared elsewhere (a CV, an email
 signature) stop working.
 
+### Card fields
+
+Mostly for the Director, Deputy Directors, Members and Advisors, whose People page card carries buttons
+to their own pages. All optional and safe to change:
+
+| Field | Purpose |
+| --- | --- |
+| `detail` | A line under the role on the card: a portfolio (`"Planning"`), satellite centre or institution. |
+| `order` | Position within the role's group on the People page: `1` first. People without one follow, by name. |
+| `links` | Round buttons on the card, each optional: `website` (personal site), `university` (staff page), `scholar` (Google Scholar) and `linkedin`. |
+| `page` | `false`: the card only, without a page of its own. The default is a page. |
+
+```yaml
+detail: "Planning"
+order: 1
+page: false
+links:
+  university: "https://people.ce.pdn.ac.lk/staff/academic/roshan-ragel/"
+  scholar: "https://scholar.google.com/citations?user=UTYj8usAAAAJ"
+  linkedin: "https://www.linkedin.com/in/roshanragel/"
+```
+
 ## Roles
 
 The People page groups current members by their `post`, under these headings:
@@ -216,6 +238,8 @@ The People page groups current members by their `post`, under these headings:
 | --- | --- |
 | `Director` | Director |
 | `Deputy Director` | Deputy Directors |
+| `Member` | Members |
+| `Advisor` | Advisors |
 | `Project Coordinator`, `Research Engineer`, `Research Assistant`, `Research Intern` | Engineers, Research Assistants & Coordinators |
 | `Volunteer` | Volunteers |
 
