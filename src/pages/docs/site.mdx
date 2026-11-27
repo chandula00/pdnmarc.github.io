@@ -93,8 +93,12 @@ links:
 ```
 
 Use a square photo (at least 400 × 400 pixels, face in the middle) in `profiles/photos/`. Leave out a link
-they don't have and its button disappears; leave out `photo` and the card shows a neutral avatar. Someone
-with a biography can keep their page: leave out `page: false`, and the name on their card links to it.
+they don't have and its button disappears; leave out `photo` and the card shows a neutral avatar.
+
+For these four roles only, their name, wherever it appears (People page, About page, project teams), links
+to their portfolio (`website`), or else their faculty bio page (`university`), in a new tab. Without either,
+it links to their page on this site if they have one (no `page: false`), and otherwise is not a link.
+Everyone else's name links to their page on this site.
 
 ## Research areas
 
