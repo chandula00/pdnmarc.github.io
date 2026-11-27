@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PersonCard from "../../components/PersonCard.astro";
 import Tag from "../../components/ui/Tag.astro";
-import { byOrderThenName, isPast, personUrl } from "../../lib/people";
+import { byOrderThenName, isPast, personLink } from "../../lib/people";
 
 const everyone = await getCollection("people");
 // Current members are grouped by role; past members (`status: past`) get their own section last.
@@ -81,7 +81,8 @@ const groups = [
                                 <PersonCard
                                     name={person.data.name}
                                     role={person.data.post}
-                                    href={personUrl(person)}
+                                    href={personLink(person)?.href}
+                                    external={personLink(person)?.external}
                                     photo={person.data.photo}
                                     affiliation={
                                         isPast(person) && person.data.currentPosition

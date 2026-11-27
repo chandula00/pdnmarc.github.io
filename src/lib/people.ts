@@ -21,6 +21,23 @@ export const personEmails = (person: Person) =>
 /** A profile with `page: false` (leadership, advisors) has only its card on the People page. */
 export const personUrl = (person: Person): string | undefined => (person.data.page ? `/people/${person.id}/` : undefined);
 
+/** Roles whose names link to their own portfolio or faculty bio page instead of a page here. */
+export const OWN_PAGE_POSTS = ["Director", "Deputy Director", "Member", "Advisor"];
+
+/**
+ * Where a person's name links, wherever it appears. For the Director, Deputy Directors, Members and
+ * Advisors: their own portfolio (`links.website`), else their faculty bio page (`links.university`).
+ * Otherwise, and as a fallback: their page on this site, if they have one.
+ */
+export function personLink(person: Person): { href: string; external: boolean } | undefined {
+    const own = OWN_PAGE_POSTS.includes(person.data.post)
+        ? (person.data.links?.website ?? person.data.links?.university)
+        : undefined;
+    if (own) return { href: own, external: true };
+    const url = personUrl(person);
+    return url ? { href: url, external: false } : undefined;
+}
+
 /** Order within a group: `order` first (1, 2, …), then everyone without one, by name. */
 export const byOrderThenName = (a: Person, b: Person) =>
     (a.data.order ?? Infinity) - (b.data.order ?? Infinity) || a.data.name.localeCompare(b.data.name);

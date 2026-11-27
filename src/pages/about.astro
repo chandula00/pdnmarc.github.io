@@ -16,7 +16,7 @@ import uopLogo from "../assets/UOP_logo.png";
 import { site, statements, disciplines, ecosystem } from "../data/site";
 import { getResearchAreas } from "../lib/research";
 import { getAllPublications } from "../lib/publications";
-import { byOrderThenName, isPast, personUrl } from "../lib/people";
+import { byOrderThenName, isPast, personLink } from "../lib/people";
 
 const [projects, publications, people] = await Promise.all([
     getCollection("projects"),
@@ -44,7 +44,10 @@ const initials = (name: string) =>
         .map((w) => w[0])
         .slice(-2)
         .join("");
-const directorUrl = director && personUrl(director);
+// Names link to the person's portfolio, else their faculty bio page (src/lib/people.ts), in a new tab.
+const directorLink = director && personLink(director);
+const newTab = (link?: { external: boolean }) =>
+    link?.external ? { target: "_blank", rel: "noopener" } : {};
 ---
 
 <BaseLayout
@@ -129,9 +132,10 @@ const directorUrl = director && personUrl(director);
                         <div>
                             <Tag variant="red">Director</Tag>
                             <h3 class="text-h3 mt-3">
-                                {directorUrl ? (
-                                    <a href={directorUrl} class="hover:text-primary hover:underline">
+                                {directorLink ? (
+                                    <a href={directorLink.href} {...newTab(directorLink)} class="hover:text-primary hover:underline">
                                         {director.data.name}
+                                        {directorLink.external && <span class="sr-only"> (opens in a new tab)</span>}
                                     </a>
                                 ) : (
                                     director.data.name
@@ -153,7 +157,7 @@ const directorUrl = director && personUrl(director);
                 <ul class="deputies mt-4">
                     {
                         deputies.map((d) => {
-                            const url = personUrl(d);
+                            const link = personLink(d);
                             const avatar = d.data.photo ? (
                                 <Image src={d.data.photo} alt="" width={160} class="deputy__img" />
                             ) : (
@@ -163,12 +167,16 @@ const directorUrl = director && personUrl(director);
                             );
                             return (
                                 <li>
-                                    {url ? (
-                                        <a href={url} class="deputy deputy--link">
+                                    {link ? (
+                                        <a href={link.href} {...newTab(link)} class="deputy deputy--link">
                                             {avatar}
                                             <span class="deputy__name">{d.data.name}</span>
                                             <span class="deputy__role">{d.data.detail}</span>
-                                            <Icon name="material-symbols:chevron-right" class="deputy__chev" />
+                                            <Icon
+                                                name={link.external ? "material-symbols:arrow-outward" : "material-symbols:chevron-right"}
+                                                class="deputy__chev"
+                                            />
+                                            {link.external && <span class="sr-only"> (opens in a new tab)</span>}
                                         </a>
                                     ) : (
                                         <div class="deputy">
@@ -238,21 +246,40 @@ const directorUrl = director && personUrl(director);
                 <p class="mt-2 text-muted">International advisors and their institutions.</p>
                 <ul class="list mt-6">
                     {
-                        advisors.map((a) => (
-                            <li class="list__row">
-                                {a.data.photo ? (
-                                    <Image src={a.data.photo} alt="" width={160} class="list__photo" />
-                                ) : (
-                                    <span class="list__icon">
-                                        <Icon name="material-symbols:account-balance-outline" />
+                        advisors.map((a) => {
+                            const link = personLink(a);
+                            const body = (
+                                <>
+                                    {a.data.photo ? (
+                                        <Image src={a.data.photo} alt="" width={160} class="list__photo" />
+                                    ) : (
+                                        <span class="list__icon">
+                                            <Icon name="material-symbols:account-balance-outline" />
+                                        </span>
+                                    )}
+                                    <span class="flex-1">
+                                        <span class="block font-semibold text-heading">{a.data.name}</span>
+                                        {a.data.detail && <span class="block text-sm text-muted">{a.data.detail}</span>}
                                     </span>
-                                )}
-                                <span>
-                                    <span class="block font-semibold text-heading">{a.data.name}</span>
-                                    {a.data.detail && <span class="block text-sm text-muted">{a.data.detail}</span>}
-                                </span>
-                            </li>
-                        ))
+                                </>
+                            );
+                            return (
+                                <li>
+                                    {link ? (
+                                        <a href={link.href} {...newTab(link)} class="list__row list__row--link">
+                                            {body}
+                                            <Icon
+                                                name={link.external ? "material-symbols:arrow-outward" : "material-symbols:chevron-right"}
+                                                class="list__end"
+                                            />
+                                            {link.external && <span class="sr-only"> (opens in a new tab)</span>}
+                                        </a>
+                                    ) : (
+                                        <div class="list__row">{body}</div>
+                                    )}
+                                </li>
+                            );
+                        })
                     }
                 </ul>
             </div>

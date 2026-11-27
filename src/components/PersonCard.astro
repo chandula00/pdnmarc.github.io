@@ -2,7 +2,8 @@
 // Person tile (spec §9.9): round photo, name, role — the layout Google uses on team pages.
 // Emails are never printed (decision D12). No photo → neutral avatar icon.
 // Two kinds: a whole-card link to a profile page (`href`), or, with `links`, a card with round
-// buttons to the person's own pages; its name links to `href` when there is one.
+// buttons to the person's own pages; its name links to `href` when there is one (`external`: a page
+// on another site, such as their portfolio, opened in a new tab).
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import Icon from "./ui/Icon.astro";
@@ -13,12 +14,13 @@ interface Props {
     name: string;
     role: string;
     href?: string;
+    external?: boolean;
     photo?: ImageMetadata;
     affiliation?: string;
     links?: ProfileLinksData;
     headingLevel?: "h3" | "h4";
 }
-const { name, role, href, photo, affiliation, links, headingLevel: H = "h3" } = Astro.props;
+const { name, role, href, external = false, photo, affiliation, links, headingLevel: H = "h3" } = Astro.props;
 const asLink = Boolean(href) && !links;
 const Root = asLink ? "a" : "article";
 ---
@@ -36,7 +38,16 @@ const Root = asLink ? "a" : "article";
         }
     </span>
     <H class="person__name">
-        {!asLink && href ? <a href={href} class="person__name-link">{name}</a> : name}
+        {
+            !asLink && href ? (
+                <a href={href} class="person__name-link" target={external ? "_blank" : undefined} rel={external ? "noopener" : undefined}>
+                    {name}
+                    {external && <span class="sr-only"> (opens in a new tab)</span>}
+                </a>
+            ) : (
+                name
+            )
+        }
     </H>
     <p class="person__role">{role}</p>
     {affiliation && <p class="person__aff">{affiliation}</p>}
